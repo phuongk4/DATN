@@ -1,0 +1,85 @@
+<?php
+
+namespace App\Http\Controllers\restapi\admin;
+
+use App\Enums\OrderStatus;
+use App\Http\Controllers\Api;
+use App\Http\Controllers\Controller;
+use App\Models\Orders;
+use App\Models\Revenues;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+class AdminOrderApi extends Api
+{
+    public function list(Request $request)
+    {
+        $status = $request->input('status');
+        $user_id = $request->input('user_id');
+
+        if ($status) {
+            $orders = Orders::where('status', $status);
+        } else {
+            $orders = Orders::where('status', '!=', OrderStatus::DELETED);
+        }
+
+        if ($user_id) {
+            $orders = $orders->where('user_id', $user_id);
+        }
+
+        $orders = $orders->cursor()
+            ->map(function ($item) {
+                $order = $item->toArray();
+                $order['order_items'] = $item->order_items;
+                return $order;
+            });
+
+        $data = returnMessage(1, $orders, 'Success');
+        return response($data, 200);
+    }
+
+    public function detail($id)
+    {
+
+    }
+
+    public function update($id, Request $request)
+    {
+        try {
+            $status = $request->input('status');
+            $order = Orders::find($id);
+            if (!$order || $order->status == OrderStatus::DELETED) {
+                $data = returnMessage(0, null, 'Order not found');
+                return response($data, 404);
+            }
+
+            if ($order->status == OrderStatus::CANCELED) {
+                $data = returnMessage(0, null, 'Order already canceled');
+                return response($data, 400);
+            }
+
+            if ($status == OrderStatus::COMPLETED) {
+                $data = returnMessage(0, null, 'Order already completed');
+                return response($data, 400);
+            }
+
+            $order->status = $status ?? OrderStatus::CANCELED;
+            $order->save();
+            if ($status == OrderStatus::CANCELED) {
+
+            }
+
+            if ($status == OrderStatus::COMPLETED) {
+                $revenue = new Revenues();
+                $revenue->total = $order->total_price;
+                $revenue->order_id = $order->id;
+                $revenue->save();
+            }
+            $data = returnMessage(1, $order, 'Update order success');
+            return response($data, 200);
+        } catch (\Exception $exception) {
+            $data = returnMessage(-1, '', $exception->getMessage());
+            return response($data, 400);
+        }
+    }
+}

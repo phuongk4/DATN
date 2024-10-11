@@ -1,0 +1,1382 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel API",
+        "version": "3.0"
+    },
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User login",
+                "description": "User login",
+                "operationId": "7d4d9ed0746e514e80af5b34fca25b8b",
+                "requestBody": {
+                    "description": "User login info",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "login_request",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "login_request": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Passw0rd"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "full_name": {
+                                            "type": "string",
+                                            "example": "Nguyen Van A"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "format": "email",
+                                            "example": "user@example.com"
+                                        },
+                                        "phone": {
+                                            "type": "string",
+                                            "example": "123456789"
+                                        },
+                                        "role": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "accessToken": {
+                                            "type": "string",
+                                            "example": "abcxyz1234567890"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Th  t b i, Vui l ng ki m tra l i t i kho n ho c m t kh u!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "description": "Register a new user",
+                "operationId": "5bde8adf0a7ad4c8e6e1a7d47d11ffeb",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Nguyen Van A"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "example": "user1@example.com"
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "description": "Phone",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "123456789"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Password",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "password"
+                        },
+                        "example": "123456"
+                    },
+                    {
+                        "name": "password_confirm",
+                        "in": "query",
+                        "description": "Password confirm",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "password"
+                        },
+                        "example": "123456"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Th  t b i, Vui l ng ki m tra l i t i kho n ho c m t kh u!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Thành công, Vui lòng kiểm tra email!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logs out the user from the system",
+                "description": "Logs out the user from the system.",
+                "operationId": "b8031cfd36aea9276d59b2f5b43b3ed0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "access_token": {
+                                        "type": "string",
+                                        "example": "abcxyz1234567890"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đăng xuất thành công!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/list": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get list of products",
+                "description": "Get list of products",
+                "operationId": "5483eb7cecc3c33076a57e82ddc1f3db",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/products/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get detail of a product",
+                "description": "Get detail of a product",
+                "operationId": "60a0239fa43acb702fd8e767cb8e4683",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/products/search": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Search products",
+                "description": "Search products",
+                "operationId": "6b37e664ea67a748190f4753687fd433",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Category ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "min_price",
+                        "in": "query",
+                        "description": "Minimum price",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "description": "Maximum price",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/properties/list": {
+            "get": {
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Get list of properties",
+                "description": "Get list of properties",
+                "operationId": "7955123ac6eabfa7258605f5e798dab6",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name of the property",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "attribute_id",
+                        "in": "query",
+                        "description": "Attribute ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/properties/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Get detail of a property",
+                "description": "Get detail of a property",
+                "operationId": "6facbe004f716f0dafbae0587a27c159",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                }
+            }
+        },
+        "/api/auth/users/get-info": {
+            "get": {
+                "tags": [
+                    "Users Api"
+                ],
+                "summary": "Get user information from token",
+                "description": "Get user information from token",
+                "operationId": "7eb8babad875923afee93985c319a622",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/attributes/list": {
+            "get": {
+                "tags": [
+                    "Admin Attribute"
+                ],
+                "summary": "Get list of attributes",
+                "description": "Get list of attributes",
+                "operationId": "1c534e2a4f980e27b6468f6901fa9cf0",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/attributes/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Admin Attribute"
+                ],
+                "summary": "Get detail of an attribute",
+                "description": "Get detail of an attribute",
+                "operationId": "ab72c43b2d1b3ddcc53789e9ae10dcc8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Attribute ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Attribute not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/attributes/create": {
+            "post": {
+                "tags": [
+                    "Admin Attribute"
+                ],
+                "summary": "Create an attribute",
+                "description": "Create an attribute",
+                "operationId": "7bb5f8f6681b3090acec49ee787af91c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Attribute name",
+                                        "type": "string",
+                                        "example": "Attribute 1"
+                                    },
+                                    "status": {
+                                        "description": "Attribute status",
+                                        "type": "integer",
+                                        "example": "ĐANG HOẠT ĐỘNG"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/api/admin/attributes/update/{id}": {
+            "put": {
+                "tags": [
+                    "Admin Attribute"
+                ],
+                "summary": "Update an attribute",
+                "description": "Update an attribute",
+                "operationId": "c22510ba09271b5be0ca6ce6e6db11c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Attribute ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Attribute information",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Attribute name",
+                                        "type": "string",
+                                        "example": "Attribute 1"
+                                    },
+                                    "status": {
+                                        "description": "Attribute status",
+                                        "type": "integer",
+                                        "example": "ĐANG HOẠT ĐỘNG"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/api/admin/attributes/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Admin Attribute"
+                ],
+                "summary": "Delete an attribute",
+                "description": "Delete an attribute",
+                "operationId": "c8a6aa3eecb1c660bc4d22046bc09fd9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Attribute ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/api/admin/categories/list": {
+            "get": {
+                "tags": [
+                    "Admin Category"
+                ],
+                "summary": "Get list of categories",
+                "description": "Get list of categories",
+                "operationId": "d54a9836418a10f52885f6da5c62c9c0",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/categories/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Admin Category"
+                ],
+                "summary": "Get detail of a category",
+                "description": "Get detail of a category",
+                "operationId": "190810ac0ac47d830156c882d3f9a6c8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/categories/create": {
+            "post": {
+                "tags": [
+                    "Admin Category"
+                ],
+                "summary": "Create category",
+                "description": "Create category",
+                "operationId": "617af3c76c0cd64f7c42aea8ed46907d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the category",
+                                        "type": "string"
+                                    },
+                                    "parent_id": {
+                                        "description": "Parent category ID",
+                                        "type": "integer"
+                                    },
+                                    "status": {
+                                        "description": "Status of the category",
+                                        "type": "integer",
+                                        "enum": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    },
+                                    "thumbnail": {
+                                        "description": "Thumbnail of the category",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/categories/update/{id}": {
+            "put": {
+                "tags": [
+                    "Admin Category"
+                ],
+                "summary": "Update a category",
+                "description": "Update a category",
+                "operationId": "3ebee98e05c2e7c66b744d76ecda2950",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the category",
+                                        "type": "string"
+                                    },
+                                    "parent_id": {
+                                        "description": "Parent category ID",
+                                        "type": "integer"
+                                    },
+                                    "status": {
+                                        "description": "Status of the category",
+                                        "type": "integer",
+                                        "enum": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    },
+                                    "thumbnail": {
+                                        "description": "Thumbnail of the category",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/admin/categories/{id}": {
+            "delete": {
+                "tags": [
+                    "Admin Category"
+                ],
+                "summary": "Delete a category",
+                "description": "Delete a category",
+                "operationId": "95ecc4d1f5cf9700cb9131453b055d1d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/products/list": {
+            "get": {
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Get list of products",
+                "description": "Get list of products",
+                "operationId": "524cc2ddadf5a76ec7207338c1deffb2",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/products/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Get detail of a product",
+                "description": "Get detail of a product",
+                "operationId": "1f24db3412602c3adb8f3781fbb9b727",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/products/create": {
+            "post": {
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Create product",
+                "description": "Create a new product",
+                "operationId": "133be1e44de223e0af7faceb8ac3996a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the product",
+                                        "type": "string",
+                                        "example": "Sample Product"
+                                    },
+                                    "short_description": {
+                                        "description": "Short description of the product",
+                                        "type": "string",
+                                        "example": "This is a short description."
+                                    },
+                                    "description": {
+                                        "description": "Detailed description of the product",
+                                        "type": "string",
+                                        "example": "This is a detailed description of the product."
+                                    },
+                                    "parent_id": {
+                                        "description": "Category ID for the product",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "thumbnail": {
+                                        "description": "Thumbnail image of the product",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "gallery": {
+                                        "description": "Gallery images of the product",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "price": {
+                                        "description": "Price of the product",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 19.99
+                                    },
+                                    "sale_price": {
+                                        "description": "Sale price of the product",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 14.99
+                                    },
+                                    "quantity": {
+                                        "description": "Quantity of the product",
+                                        "type": "integer",
+                                        "example": 100
+                                    },
+                                    "status": {
+                                        "description": "Status of the product (e.g., available, out of stock)",
+                                        "type": "integer",
+                                        "enum": [
+                                            1,
+                                            2,
+                                            3
+                                        ],
+                                        "example": 1
+                                    },
+                                    "data_options": {
+                                        "description": "The options of the product",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "quantity": {
+                                                    "description": "The quantity of the option",
+                                                    "type": "integer"
+                                                },
+                                                "price": {
+                                                    "description": "The price of the option",
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "sale_price": {
+                                                    "description": "The sale price of the option",
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "description": {
+                                                    "description": "The description of the option",
+                                                    "type": "string"
+                                                },
+                                                "data_images": {
+                                                    "description": "The images of the option",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "format": "binary"
+                                                    }
+                                                },
+                                                "_options": {
+                                                    "description": "The values of the option",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product created successfully"
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/admin/products/update/{id}": {
+            "put": {
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Update product",
+                "description": "Update an existing product",
+                "operationId": "fbee7df00b58c33b4ddb0c43b9bb2ecf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the product",
+                                        "type": "string"
+                                    },
+                                    "short_description": {
+                                        "description": "Short description of the product",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Detailed description of the product",
+                                        "type": "string"
+                                    },
+                                    "parent_id": {
+                                        "description": "Category ID",
+                                        "type": "integer"
+                                    },
+                                    "thumbnail": {
+                                        "description": "Thumbnail image of the product",
+                                        "type": "file",
+                                        "format": "binary"
+                                    },
+                                    "gallery": {
+                                        "description": "Gallery images of the product",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "price": {
+                                        "description": "Price of the product",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "sale_price": {
+                                        "description": "Sale price of the product",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "quantity": {
+                                        "description": "Quantity of the product",
+                                        "type": "integer"
+                                    },
+                                    "status": {
+                                        "description": "Status of the product (e.g., available, out of stock)",
+                                        "type": "integer",
+                                        "enum": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/products/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Delete a product",
+                "description": "Delete a product",
+                "operationId": "7aba7483555bca00f129913eaad08809",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/properties/list": {
+            "get": {
+                "tags": [
+                    "Admin Property"
+                ],
+                "summary": "Get list of properties",
+                "description": "Get list of properties",
+                "operationId": "565f5362f0546f5014d060b629c70973",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/properties/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Admin Property"
+                ],
+                "summary": "Get detail of a property",
+                "description": "Get detail of a property",
+                "operationId": "0bb847479c5da12d4979dc7d5f5cee8d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/properties/create": {
+            "post": {
+                "tags": [
+                    "Admin Property"
+                ],
+                "summary": "Create a property",
+                "description": "Create a property",
+                "operationId": "b4385c20072db77e91d81ce51cb0e486",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the property",
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "description": "Status of the property",
+                                        "type": "integer"
+                                    },
+                                    "attribute_id": {
+                                        "description": "Attribute ID",
+                                        "type": "integer"
+                                    },
+                                    "thumbnail": {
+                                        "description": "Thumbnail of the property",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/api/admin/properties/update/{id}": {
+            "put": {
+                "tags": [
+                    "Admin Property"
+                ],
+                "summary": "Update a property",
+                "description": "Update a property",
+                "operationId": "53e4d6e98358e21a86755298df330dfd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the property",
+                                        "type": "string"
+                                    },
+                                    "thumbnail": {
+                                        "description": "Thumbnail of the property",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "status": {
+                                        "description": "Property status",
+                                        "type": "integer",
+                                        "example": "ĐANG HOẠT ĐỘNG"
+                                    },
+                                    "attribute_id": {
+                                        "description": "Attribute ID",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/properties/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Admin Property"
+                ],
+                "summary": "Delete a property",
+                "description": "Delete a property",
+                "operationId": "608e1b7416f133a5fc0df7e336a1bda1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Product",
+            "description": "Product"
+        },
+        {
+            "name": "Property",
+            "description": "Property"
+        },
+        {
+            "name": "Users Api",
+            "description": "Users Api"
+        },
+        {
+            "name": "Admin Attribute",
+            "description": "Admin Attribute"
+        },
+        {
+            "name": "Admin Category",
+            "description": "Admin Category"
+        },
+        {
+            "name": "Admin Product",
+            "description": "Admin Product"
+        },
+        {
+            "name": "Admin Property",
+            "description": "Admin Property"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ]
+}
