@@ -1,0 +1,1 @@
+A men's fashion project can focus on building a system or platform that provides fashion-related products, services or information specifically for men.
