@@ -180,15 +180,5 @@ class MainController extends Controller
     {
         return ['message' => $message];
     }
-
-    public function test()
-    {
-        try {
-            $data = returnMessage(1, '', 'Success');
-            return response($data, 200);
-        } catch (\Exception $exception) {
-            $data = returnMessage(-1, '', $exception->getMessage());
-            return response($data, 400);
-        }
-    }
 }
+
