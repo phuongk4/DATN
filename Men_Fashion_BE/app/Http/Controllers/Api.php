@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Info(title="Laravel API", version="3.0")
+ * @OA\Info(title="Men_fashion API", version="3.0")
  *
  *
  * @OA\SecurityScheme(
