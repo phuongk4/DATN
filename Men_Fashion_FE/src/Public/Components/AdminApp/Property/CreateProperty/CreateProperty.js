@@ -30,7 +30,7 @@ function CreateProperty() {
         await propertyService.adminCreateProperty(formData)
             .then((res) => {
                 console.log("create property", res.data)
-                message.success("Tạo biến thể thành công!")
+                message.success("Tạo giá trị thuộc tính thành công!")
                 navigate("/admin/properties/list")
             })
             .catch((err) => {
@@ -67,12 +67,12 @@ function CreateProperty() {
             <Sidebar/>
             <main id="main" className="main">
                 <div className="pagetitle">
-                    <h1>Tạo biến thể</h1>
+                    <h1>Tạo giá trị thuộc tính</h1>
                     <nav>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item"><Link to="/admin/dashboard">Trang quản trị</Link></li>
-                            <li className="breadcrumb-item">Biến thể</li>
-                            <li className="breadcrumb-item active">Tạo biến thể</li>
+                            <li className="breadcrumb-item">Giá trị thuộc tính</li>
+                            <li className="breadcrumb-item active">Tạo giá trị thuộc tính</li>
                         </ol>
                     </nav>
                 </div>
@@ -81,10 +81,10 @@ function CreateProperty() {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <h5 className="card-title">Tạo biến thể</h5>
+                                    <h5 className="card-title">Tạo giá trị thuộc tính</h5>
                                     <Form onFinish={onFinish} id="formCreate">
                                         <div className="form-group">
-                                            <label htmlFor="name">Tên biến thể</label>
+                                            <label htmlFor="name">Tên giá trị thuộc tính</label>
                                             <input type="text" name="name" className="form-control" id="name" required/>
                                         </div>
                                         <div className="row">
@@ -96,7 +96,7 @@ function CreateProperty() {
                                             <div className="form-group col-md-4">
                                                 <label htmlFor="attribute_id">Thuộc tính cha</label>
                                                 <select id="attribute_id" name="attribute_id" className="form-select">
-                                                    <option value="">Chọn biến thể cha</option>
+                                                    <option value="">Chọn giá trị thuộc tính cha</option>
                                                     {
                                                         data.map((item, index) => {
                                                             return (

@@ -131,7 +131,7 @@ function HeaderClient() {
         let sort = sort_param ?? 'desc';
         let minPrice = $('#min-price').val() ?? '';
         let maxPrice = $('#max-price').val() ?? '';
-        let searchUrl = `${baseurl}?keyword=${keyword}&size=${size}&category=${category}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+        let searchUrl = `${baseurl}?keyword=${keyword}&size=${size}&category_id=${category}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
         console.log(searchUrl);
         window.location.href = searchUrl;
     }
