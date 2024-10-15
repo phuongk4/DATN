@@ -322,12 +322,12 @@ class ProductApi extends Api
      */
     public function search(Request $request)
     {
-        $category_id = $request->input('category_id');
+        $category_id = $request->input('category');
         $size = $request->input('size');
         $sort = $request->input('sort');
         $order_by = $request->input('order');
-        $min_price = $request->input('min_price');
-        $max_price = $request->input('max_price');
+        $min_price = $request->input('minPrice');
+        $max_price = $request->input('maxPrice');
         $keyword = $request->input('keyword');
 
         $products = Products::where('status', ProductStatus::ACTIVE)
@@ -338,22 +338,17 @@ class ProductApi extends Api
             })
             ->when($min_price, function ($query) use ($min_price) {
                 if (!empty($min_price)) {
-                    $query->where('price', '>=', $min_price);
+                    $query->where('sale_price', '>=', $min_price);
                 }
             })
             ->when($max_price, function ($query) use ($max_price) {
                 if (!empty($max_price)) {
-                    $query->where('price', '<=', $max_price);
+                    $query->where('sale_price', '<=', $max_price);
                 }
             })
             ->when($keyword, function ($query) use ($keyword) {
                 if (!empty($keyword)) {
                     $query->where('name', 'like', '%' . $keyword . '%');
-                }
-            })
-            ->when($keyword, function ($query) use ($keyword) {
-                if (!empty($keyword)) {
-                    $query->where('description', 'like', '%' . $keyword . '%');
                 }
             });
 
