@@ -85,12 +85,12 @@ function DetailProperty() {
             <Sidebar/>
             <main id="main" className="main">
                 <div className="pagetitle">
-                    <h1>Chỉnh sửa biến thể</h1>
+                    <h1>Chỉnh sửa giá trị thuộc tính</h1>
                     <nav>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item"><Link to="/admin/dashboard">Trang quản trị</Link></li>
                             <li className="breadcrumb-item">Danh mục</li>
-                            <li className="breadcrumb-item active">Chỉnh sửa biến thể</li>
+                            <li className="breadcrumb-item active">Chỉnh sửa giá trị thuộc tính</li>
                         </ol>
                     </nav>
                 </div>
@@ -100,10 +100,10 @@ function DetailProperty() {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <h5 className="card-title">Chỉnh sửa biến thể</h5>
+                                    <h5 className="card-title">Chỉnh sửa giá trị thuộc tính</h5>
                                     <Form onFinish={onFinish} id="formUpdate">
                                         <div className="form-group">
-                                            <label htmlFor="name">Tên biến thể</label>
+                                            <label htmlFor="name">Tên giá trị thuộc tính</label>
                                             <input type="text" name="name" className="form-control" id="name"
                                                    defaultValue={property.name} required/>
                                         </div>

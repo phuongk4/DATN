@@ -59,7 +59,7 @@ function ListProperty() {
             render: (text, record, index) => index + 1,
         },
         {
-            title: 'Tên biến thể',
+            title: 'Tên giá trị thuộc tính',
             dataIndex: 'name',
             width: 'x',
         },
@@ -140,19 +140,19 @@ function ListProperty() {
 
             <main id="main" className="main">
                 <div className="pagetitle">
-                    <h1>Danh sách biến thể</h1>
+                    <h1>Danh sách giá trị thuộc tính</h1>
                     <nav>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item"><Link to="/admin/dashboard">Trang quản trị</Link></li>
-                            <li className="breadcrumb-item">Biến thể</li>
-                            <li className="breadcrumb-item active">Danh sách biến thể</li>
+                            <li className="breadcrumb-item">Giá trị thuộc tính</li>
+                            <li className="breadcrumb-item active">Danh sách giá trị thuộc tính</li>
                         </ol>
                     </nav>
                 </div>
                 {/* End Page Title */}
                 <div className="row">
                     <div className="mb-3 col-md-3">
-                        <h5>Tìm kiếm biến thể</h5>
+                        <h5>Tìm kiếm giá trị thuộc tính</h5>
                         <input className="form-control" id="inputSearchProperty" type="text"
                                placeholder="Nhập từ khóa..."/>
                         <br/>

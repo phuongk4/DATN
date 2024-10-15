@@ -60,18 +60,18 @@ function Sidebar() {
                     <li className="nav-item">
                         <a className="nav-link collapsed" data-bs-target="#properties-nav" data-bs-toggle="collapse"
                            href="#">
-                            <i className="bi bi-view-list"></i><span>Biến thể</span><i
+                            <i className="bi bi-view-list"></i><span>Giá trị thuộc tính</span><i
                             className="bi bi-chevron-down ms-auto"></i>
                         </a>
                         <ul id="properties-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
                                 <a href="/admin/properties/list">
-                                    <i className="bi bi-circle"></i><span>Danh sách biến thể</span>
+                                    <i className="bi bi-circle"></i><span>Danh sách giá trị thuộc tính</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="/admin/properties/create">
-                                    <i className="bi bi-circle"></i><span>Thêm mới biến thể</span>
+                                    <i className="bi bi-circle"></i><span>Thêm mới giá trị thuộc tính</span>
                                 </a>
                             </li>
                         </ul>
@@ -98,26 +98,6 @@ function Sidebar() {
                     </li>
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse"
-                           href="#">
-                            <i className="bi bi-layout-text-window-reverse"></i><span>Quản lí quảng cáo</span><i
-                            className="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="tables-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
-                            <li>
-                                <a href="/admin/marketings/list">
-                                    <i className="bi bi-circle"></i><span>Danh sách quảng cáo</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/marketings/create">
-                                    <i className="bi bi-circle"></i><span>Thêm mới quảng cáo</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li className="nav-item">
                         <a className="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse"
                            href="#">
                             <i className="bi bi-bar-chart"></i><span>Quản lí đơn hàng</span><i
@@ -132,25 +112,6 @@ function Sidebar() {
                         </ul>
                     </li>
 
-                    <li className="nav-item">
-                        <a className="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse"
-                           href="#">
-                            <i className="bi bi-newspaper"></i><span>Quản lí tin tức</span><i
-                            className="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="icons-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
-                            <li>
-                                <a href="/admin/news/list">
-                                    <i className="bi bi-circle"></i><span>Danh sách tin tức</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/news/create">
-                                    <i className="bi bi-circle"></i><span>Thêm mới tin tức</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
 
                     <li className="nav-item">
                         <a className="nav-link collapsed" data-bs-target="#feedback-nav" data-bs-toggle="collapse"
@@ -162,61 +123,6 @@ function Sidebar() {
                             <li>
                                 <a href="/admin/feedbacks/list">
                                     <i className="bi bi-circle"></i><span>Danh sách đánh giá</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li className="nav-item">
-                        <a className="nav-link collapsed" data-bs-target="#contacts-nav" data-bs-toggle="collapse"
-                           href="#">
-                            <i className="bi bi-layers"></i><span>Quản lí liên hệ</span><i
-                            className="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="contacts-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
-                            <li>
-                                <a href="/admin/contacts/list">
-                                    <i className="bi bi-circle"></i><span>Danh sách liên hệ</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li className="nav-item">
-                        <a className="nav-link collapsed" data-bs-target="#members-nav" data-bs-toggle="collapse"
-                           href="#">
-                            <i className="bi bi-list-ol"></i><span>Quản lí thành viên</span><i
-                            className="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="members-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
-                            <li>
-                                <a href="/admin/members/list">
-                                    <i className="bi bi-circle"></i><span>Danh sách thành viên</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/members/create">
-                                    <i className="bi bi-circle"></i><span>Thêm mới thành viên</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li className="nav-item">
-                        <a className="nav-link collapsed" data-bs-target="#users-nav" data-bs-toggle="collapse"
-                           href="#">
-                            <i className="bi bi-usb"></i><span>Quản lí tài khoản</span><i
-                            className="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="users-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
-                            <li>
-                                <a href="/admin/users/list">
-                                    <i className="bi bi-circle"></i><span>Danh sách tài khoản</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/users/create">
-                                    <i className="bi bi-circle"></i><span>Thêm mới tài khoản</span>
                                 </a>
                             </li>
                         </ul>
