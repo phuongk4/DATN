@@ -168,7 +168,7 @@ function DetailProduct() {
             isHot = true;
         }
 
-        const formData = new FormData($('#formCreate')[0]);
+        const formData = new FormData($('#formUpdate')[0]);
 
         if (editorRef.current) {
             const content = editorRef.current.getContent();
@@ -307,7 +307,7 @@ function DetailProduct() {
             </select>
         </div>
         <div class="form-group col-md-5">
-            <label for="property_item">Biến thể</label>
+            <label for="property_item">Giá trị thuộc tính</label>
             <select name="property_item" class="form-select form_input_" data-sl="">
                 <option value="${el.property_item.id}">${el.property_item.name}</option>
             </select>
@@ -436,9 +436,9 @@ function DetailProduct() {
             </select>
         </div>
         <div class="form-group col-md-5">
-            <label for="property_item">Biến thể</label>
+            <label for="property_item">Giá trị thuộc tính</label>
             <select name="property_item" class="form-select form_input_">
-                <option value="">-- Chọn biến thể --</option>
+                <option value="">-- Chọn giá trị thuộc tính --</option>
             </select>
         </div>
         <div class="col-md-2 mt-4">
@@ -480,12 +480,12 @@ function DetailProduct() {
             <Sidebar/>
             <main id="main" className="main">
                 <div className="pagetitle">
-                    <h1>Tạo mới sản phẩm</h1>
+                    <h1>Chi tiết sản phẩm</h1>
                     <nav>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item"><Link to="/admin/dashboard">Trang quản trị</Link></li>
                             <li className="breadcrumb-item">Quản lí sản phẩm</li>
-                            <li className="breadcrumb-item active">Tạo mới sản phẩm</li>
+                            <li className="breadcrumb-item active">Chi tiết sản phẩm</li>
                         </ol>
                     </nav>
                 </div>
@@ -494,11 +494,12 @@ function DetailProduct() {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <h5 className="card-title">Tạo mới sản phẩm</h5>
+                                    <h5 className="card-title">Chi tiết sản phẩm</h5>
                                     <Form onFinish={onFinish} id="formUpdate">
                                         <div className="form-group">
                                             <label htmlFor="name">Tên sản phẩm</label>
-                                            <input type="text" className="form-control form_input_" id="name" name="name"
+                                            <input type="text" className="form-control form_input_" id="name"
+                                                   name="name"
                                                    defaultValue={product.name} required/>
                                         </div>
                                         <div className="row">
@@ -509,7 +510,8 @@ function DetailProduct() {
                                             </div>
                                             <div className="form-group col-md-4">
                                                 <label htmlFor="sale_price">Giá mới</label>
-                                                <input type="number" className="form-control form_input_" id="sale_price"
+                                                <input type="number" className="form-control form_input_"
+                                                       id="sale_price"
                                                        name="sale_price" defaultValue={product.sale_price}
                                                        required/>
                                             </div>
@@ -581,24 +583,11 @@ function DetailProduct() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="row mt-3">
-                                            <div className="d-flex align-items-center justify-content-between mb-2">
-                                                <label>
-                                                    Thông tin sản phẩm
-                                                </label>
-
-                                                <button className="btn btn-outline-primary btnAddAttribute"
-                                                        type="button" onClick={addTableOption}>Thêm biến thể
-                                                </button>
-                                            </div>
-                                            <div id="render_table_attr" className="">
-
-                                            </div>
-                                        </div>
                                         <div className="row">
                                             <div className="form-group col-md-6">
                                                 <label htmlFor="category_id">Danh mục</label>
-                                                <select id="category_id" className="form-control form_input_" name="category_id">
+                                                <select id="category_id" className="form-control form_input_"
+                                                        name="category_id">
                                                     <option value="">Chọn danh mục</option>
                                                     {
                                                         categories.map((category) => (
@@ -614,6 +603,20 @@ function DetailProduct() {
                                                     <option value="ĐANG HOẠT ĐỘNG">ĐANG HOẠT ĐỘNG</option>
                                                     <option value="KHÔNG HOẠT ĐỘNG">KHÔNG HOẠT ĐỘNG</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div className="row mt-3">
+                                            <div className="d-flex align-items-center justify-content-between mb-2">
+                                                <label>
+                                                    Thông tin sản phẩm
+                                                </label>
+
+                                                <button className="btn btn-outline-primary btnAddAttribute"
+                                                        type="button" onClick={addTableOption}>Thêm giá trị thuộc tính
+                                                </button>
+                                            </div>
+                                            <div id="render_table_attr" className="">
+
                                             </div>
                                         </div>
                                         <button type="submit" id="btnSave" className="btn btn-primary mt-3">

@@ -294,9 +294,9 @@ function CreateProduct() {
             </select>
         </div>
         <div class="form-group col-md-5">
-            <label for="property_item">Biến thể</label>
+            <label for="property_item">Giá trị thuộc tính</label>
             <select name="property_item" class="form-select form_input_">
-                <option value="">-- Chọn biến thể --</option>
+                <option value="">-- Chọn giá trị thuộc tính --</option>
             </select>
         </div>
         <div class="col-md-2 mt-4">
@@ -355,7 +355,8 @@ function CreateProduct() {
                                     <Form onFinish={onFinish} id="formCreate">
                                         <div className="form-group">
                                             <label htmlFor="name">Tên sản phẩm</label>
-                                            <input type="text" className="form-control form_input_" id="name" name="name"
+                                            <input type="text" className="form-control form_input_" id="name"
+                                                   name="name"
                                                    required/>
                                         </div>
                                         <div className="row">
@@ -366,7 +367,8 @@ function CreateProduct() {
                                             </div>
                                             <div className="form-group col-md-4">
                                                 <label htmlFor="sale_price">Giá mới</label>
-                                                <input type="number" className="form-control form_input_" id="sale_price"
+                                                <input type="number" className="form-control form_input_"
+                                                       id="sale_price"
                                                        name="sale_price"
                                                        required/>
                                             </div>
@@ -428,28 +430,16 @@ function CreateProduct() {
                                             </div>
                                             <div className="form-group col-md-6">
                                                 <label htmlFor="file">Hình ảnh chi tiết</label>
-                                                <input type="file" className="form-control form_input_" id="gallery" name="gallery"
+                                                <input type="file" className="form-control form_input_" id="gallery"
+                                                       name="gallery"
                                                        multiple required/>
-                                            </div>
-                                        </div>
-                                        <div className="row mt-3">
-                                            <div className="d-flex align-items-center justify-content-between mb-2">
-                                                <label>
-                                                    Thông tin sản phẩm
-                                                </label>
-
-                                                <button className="btn btn-outline-primary btnAddAttribute"
-                                                        type="button" onClick={addTableOption}>Thêm biến thể
-                                                </button>
-                                            </div>
-                                            <div id="render_table_attr">
-
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="form-group col-md-6">
                                                 <label htmlFor="category_id">Danh mục</label>
-                                                <select id="category_id" className="form-control form_input_" name="category_id">
+                                                <select id="category_id" className="form-control form_input_"
+                                                        name="category_id">
                                                     <option value="">Chọn danh mục</option>
                                                     {
                                                         categories.map((category) => (
@@ -464,6 +454,20 @@ function CreateProduct() {
                                                     <option value="ĐANG HOẠT ĐỘNG">ĐANG HOẠT ĐỘNG</option>
                                                     <option value="KHÔNG HOẠT ĐỘNG">KHÔNG HOẠT ĐỘNG</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div className="row mt-3">
+                                            <div className="d-flex align-items-center justify-content-between mb-2">
+                                                <label>
+                                                    Thông tin sản phẩm
+                                                </label>
+
+                                                <button className="btn btn-outline-primary btnAddAttribute"
+                                                        type="button" onClick={addTableOption}>Thêm giá trị thuộc tính
+                                                </button>
+                                            </div>
+                                            <div id="render_table_attr">
+
                                             </div>
                                         </div>
                                         <button type="submit" id="btnCreate" className="btn btn-primary mt-3">
