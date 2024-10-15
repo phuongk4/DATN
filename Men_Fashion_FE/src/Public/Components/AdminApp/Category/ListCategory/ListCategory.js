@@ -20,9 +20,12 @@ function ListCategory() {
                     setLoading(false)
                 })
                 .catch((err) => {
-                    console.log(err)
+                    alert(err.response.data.message)
+                    console.log(err);
+                    setLoading(false);
                 })
         }
+        setLoading(false);
     }
 
     const loadFn = async () => {
