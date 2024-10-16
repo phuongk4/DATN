@@ -111,7 +111,7 @@ a:hover {
 }
 
 .form-control:active, .form-control:focus {
-    border-color: #252525;
+    border-color: #7971ea;
 }
 
 .form-control:hover, .form-control:active, .form-control:focus {
@@ -146,7 +146,7 @@ a:hover {
     position: absolute;
     width: 40px;
     height: 2px;
-    background: #252525;
+    background: #7971ea;
 }
 
 .site-section-heading.text-center:before {
@@ -159,7 +159,7 @@ a:hover {
     position: absolute;
     width: 40px;
     height: 2px;
-    background: #252525;
+    background: #7971ea;
 }
 
 .border-top {
@@ -179,7 +179,7 @@ a:hover {
 }
 
 .site-footer ul li a:hover {
-    color: #252525;
+    color: #7971ea;
 }
 
 .site-footer .footer-heading {
@@ -280,7 +280,7 @@ a:hover {
     border-radius: 50%;
     display: block;
     text-align: center;
-    background: #252525;
+    background: #7971ea;
     color: #fff;
     -webkit-transition: .2s all ease-in-out;
     -o-transition: .2s all ease-in-out;
@@ -313,7 +313,7 @@ a:hover {
 }
 
 .site-navbar .site-navigation .site-menu .active > a {
-    color: #252525;
+    color: #7971ea;
 }
 
 .site-navbar .site-navigation .site-menu a {
@@ -337,7 +337,7 @@ a:hover {
 }
 
 .site-navbar .site-navigation .site-menu > li > a:hover {
-    color: #252525;
+    color: #7971ea;
 }
 
 .site-navbar .site-navigation .site-menu .has-children {
@@ -367,7 +367,7 @@ a:hover {
     top: 100%;
     position: absolute;
     text-align: left;
-    border-top: 2px solid #252525;
+    border-top: 2px solid #7971ea;
     -webkit-box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.05);
     box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.05);
     border-left: 1px solid #edf0f5;
@@ -392,7 +392,7 @@ a:hover {
 }
 
 .site-navbar .site-navigation .site-menu .has-children .dropdown .active > a {
-    color: #252525 !important;
+    color: #7971ea !important;
 }
 
 .site-navbar .site-navigation .site-menu .has-children .dropdown > li {
@@ -432,7 +432,7 @@ a:hover {
 }
 
 .site-navbar .site-navigation .site-menu .has-children:hover > a, .site-navbar .site-navigation .site-menu .has-children:focus > a, .site-navbar .site-navigation .site-menu .has-children:active > a {
-    color: #252525;
+    color: #7971ea;
 }
 
 .site-navbar .site-navigation .site-menu .has-children:hover, .site-navbar .site-navigation .site-menu .has-children:focus, .site-navbar .site-navigation .site-menu .has-children:active {
@@ -546,7 +546,7 @@ a:hover {
 }
 
 .site-mobile-menu .site-nav-wrap a:hover {
-    color: #252525;
+    color: #7971ea;
 }
 
 .site-mobile-menu .site-nav-wrap li {
@@ -555,7 +555,7 @@ a:hover {
 }
 
 .site-mobile-menu .site-nav-wrap li.active > a {
-    color: #252525;
+    color: #7971ea;
 }
 
 .site-mobile-menu .site-nav-wrap .arrow-collapse {
@@ -695,7 +695,7 @@ a:hover {
 
 .site-blocks-1 .icon span {
     position: relative;
-    color: #252525;
+    color: #7971ea;
     top: -10px;
     font-size: 50px;
     display: inline-block;
@@ -841,7 +841,7 @@ a:hover {
     left: 0;
     font-size: 20px;
     line-height: 1;
-    color: #252525;
+    color: #7971ea;
 }
 
 .block-5 ul li.address:before {
@@ -924,7 +924,7 @@ a:hover {
 }
 
 .site-blocks-table tbody tr:first-child td {
-    border-top: 1px solid #252525 !important;
+    border-top: 1px solid #7971ea !important;
 }
 
 .site-block-order-table th {
@@ -981,7 +981,7 @@ a:hover {
 }
 
 .site-block-27 ul li.active a, .site-block-27 ul li.active span {
-    background: #252525;
+    background: #7971ea;
     color: #fff;
     border: 1px solid transparent;
 }
@@ -995,7 +995,7 @@ a:hover {
     height: 16px;
     border-radius: 50%;
     border: none !important;
-    background: #252525;
+    background: #7971ea;
 }
 
 #slider-range .ui-slider-handle:focus, #slider-range .ui-slider-handle:active {
@@ -1003,7 +1003,7 @@ a:hover {
 }
 
 #slider-range .ui-slider-range {
-    background-color: #252525;
+    background-color: #7971ea;
 }
 
 .color-item .color {
@@ -1158,7 +1158,6 @@ a:hover {
     color: gray;
 }
 
-
 .text_truncate_ {
     display: -webkit-box !important;
     -webkit-line-clamp: 1;
@@ -1179,4 +1178,23 @@ a:hover {
     max-height: 4rem;
     text-overflow: ellipsis;
     position: relative;
+}
+
+.productDetail .img-fluid {
+    width: 100%;
+    height: 252px;
+    object-fit: cover;
+}
+
+.productDetail .text_truncate_2_ {
+    width: 100%;
+    height: 50px;
+}
+
+.productDetail .font-weight-bold {
+    margin-top: 10px;
+}
+
+.product_category .active {
+    color: #0b5ed7;
 }

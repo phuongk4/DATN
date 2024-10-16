@@ -195,23 +195,24 @@
                 }
             }
         },
-        "/auth/logout": {
-            "get": {
+        "/auth/forgot_password": {
+            "post": {
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Logs out the user from the system",
-                "description": "Logs out the user from the system.",
-                "operationId": "b8031cfd36aea9276d59b2f5b43b3ed0",
+                "summary": "Forgot password",
+                "description": "Forgot password",
+                "operationId": "968d2ca74ce6f684a31d1b7726740d3d",
                 "requestBody": {
+                    "description": "User info",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "access_token": {
+                                    "email": {
                                         "type": "string",
-                                        "example": "abcxyz1234567890"
+                                        "example": "user@example.com"
                                     }
                                 },
                                 "type": "object"
@@ -226,15 +227,631 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
                                         "message": {
                                             "type": "string",
-                                            "example": "Đăng xuất thành công!"
+                                            "example": "Success"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": -1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/change_password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Update password",
+                "description": "Update password",
+                "operationId": "23e6caa24f0c7a516dfa2aaf4d380df9",
+                "requestBody": {
+                    "description": "User info",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "nguyenvana@gmail.com"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "password_confirm": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/api/carts/list": {
+            "get": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Get list cart",
+                "description": "Get list cart",
+                "operationId": "a4e594e2b372caa1bf732b2b4908fc94",
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                }
+            }
+        },
+        "/api/carts/add": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Add to cart",
+                "description": "Add to cart",
+                "operationId": "cc502f258f357a2b831d0b071dcafba9",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "product_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "values": {
+                                        "description": "Json string, example: [[{attribute_item: 1, property_item: 1}, {attribute_item: 2, property_item: 2}]]",
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Product not found!"
+                    },
+                    "200": {
+                        "description": "Success"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/carts/change-quantity/{id}": {
+            "put": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Change quantity of a product in cart",
+                "description": "Change quantity of a product in cart",
+                "operationId": "de0920daa6a875a6b48ced9bf66c197f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Cart ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "quantity": {
+                                        "description": "Quantity of product",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Cart not found!"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/carts/remove/{id}": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Remove cart",
+                "description": "Remove cart",
+                "operationId": "3b47e7df0bff6fb0fbd9e559e212e948",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/carts/clear": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Clear cart",
+                "description": "Clear cart",
+                "operationId": "5aaab3f155af89598fbd69a62c079fe5",
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "Clear success"
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                }
+            }
+        },
+        "/api/checkout": {
+            "post": {
+                "tags": [
+                    "Checkout"
+                ],
+                "summary": "Checkout",
+                "operationId": "e5f8e671895f54212329d9f0f90f823b",
+                "requestBody": {
+                    "description": "Send order info",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "_token": {
+                                        "type": "string",
+                                        "example": "token"
+                                    },
+                                    "full_name": {
+                                        "type": "string",
+                                        "example": "Nguyen Van A"
+                                    },
+                                    "c_email_address": {
+                                        "type": "string",
+                                        "example": "nguyenvana@gmail.com"
+                                    },
+                                    "c_phone": {
+                                        "type": "string",
+                                        "example": "0909090909"
+                                    },
+                                    "c_address": {
+                                        "type": "string",
+                                        "example": "Ha Noi"
+                                    },
+                                    "d_address": {
+                                        "type": "string",
+                                        "example": "Ho Chi Minh"
+                                    },
+                                    "order_method": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "c_total_product": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "c_shipping_price": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "c_discount_price": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "c_total": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "c_order_notes": {
+                                        "type": "string",
+                                        "example": "abc"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Checkout successfully!"
+                    },
+                    "400": {
+                        "description": "Checkout error!"
+                    }
+                }
+            }
+        },
+        "/api/return_checkout_vnpay": {
+            "post": {
+                "tags": [
+                    "Checkout"
+                ],
+                "summary": "Checkout",
+                "operationId": "f5cf3ef1400baf1e72cace383a5e45dd",
+                "requestBody": {
+                    "description": "Send order info",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "_token": {
+                                        "type": "string",
+                                        "example": "token"
+                                    },
+                                    "full_name": {
+                                        "type": "string",
+                                        "example": "Nguyen Van A"
+                                    },
+                                    "c_email_address": {
+                                        "type": "string",
+                                        "example": "nguyenvana@gmail.com"
+                                    },
+                                    "c_phone": {
+                                        "type": "string",
+                                        "example": "0909090909"
+                                    },
+                                    "c_address": {
+                                        "type": "string",
+                                        "example": "Ha Noi"
+                                    },
+                                    "d_address": {
+                                        "type": "string",
+                                        "example": "Ho Chi Minh"
+                                    },
+                                    "order_method": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "c_total_product": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "c_shipping_price": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "c_discount_price": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "c_total": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "c_order_notes": {
+                                        "type": "string",
+                                        "example": "abc"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Checkout successfully!"
+                    },
+                    "400": {
+                        "description": "Checkout error!"
+                    }
+                }
+            }
+        },
+        "/api/checkout_vnpay": {
+            "post": {
+                "tags": [
+                    "Checkout"
+                ],
+                "summary": "Checkout using VNPay",
+                "description": "Checkout by VNPay",
+                "operationId": "908e40d5a7f30867a91baee936b5ffb3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "Recipient email address.",
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    },
+                                    "c_total": {
+                                        "description": "Total amount for the order, in VND.",
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "_token": {
+                                        "description": "CSRF token for security.",
+                                        "type": "string",
+                                        "example": "abcdef123456"
+                                    },
+                                    "full_name": {
+                                        "description": "Full name of the customer.",
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "c_email_address": {
+                                        "description": "Customer's email address.",
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "c_phone": {
+                                        "description": "Customer's phone number.",
+                                        "type": "string",
+                                        "example": "0912345678"
+                                    },
+                                    "c_address": {
+                                        "description": "Billing address of the customer.",
+                                        "type": "string",
+                                        "example": "123 Main St, Hanoi"
+                                    },
+                                    "d_address": {
+                                        "description": "Delivery address.",
+                                        "type": "string",
+                                        "example": "456 Elm St, Hanoi"
+                                    },
+                                    "c_total_product": {
+                                        "description": "Total price of products.",
+                                        "type": "integer",
+                                        "example": 90000
+                                    },
+                                    "c_shipping_price": {
+                                        "description": "Shipping price.",
+                                        "type": "integer",
+                                        "example": 5000
+                                    },
+                                    "c_discount_price": {
+                                        "description": "Discount applied to the order.",
+                                        "type": "integer",
+                                        "example": 5000
+                                    },
+                                    "c_order_notes": {
+                                        "description": "Additional notes about the order.",
+                                        "type": "string",
+                                        "example": "Leave package at the front door."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Bad request."
+                    },
+                    "401": {
+                        "description": "Unauthorized."
+                    },
+                    "404": {
+                        "description": "Order not found."
+                    },
+                    "200": {
+                        "description": "Success."
+                    },
+                    "500": {
+                        "description": "Internal Server Error."
+                    }
+                }
+            }
+        },
+        "/api/orders/list": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Get list of orders",
+                "description": "Get list of orders",
+                "operationId": "990c7f780c268e9aa0256c847c26f004",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Order status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "processing",
+                                "shipping",
+                                "delivered",
+                                "canceled",
+                                "deleted"
+                            ]
+                        },
+                        "example": "processing"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/orders/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Get detail of an order",
+                "description": "Get detail of an order",
+                "operationId": "c2feeb79d54f7987626482f8f9684ac4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Order ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    }
+                }
+            }
+        },
+        "/api/orders/cancel/{id}": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Cancel an order",
+                "description": "Cancel an order",
+                "operationId": "5946a6eef8a01542f0a4db5461395a0d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Order ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Order not found"
                     }
                 }
             }
@@ -277,6 +894,27 @@
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/products/get-info": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get info of a product",
+                "description": "Get info of a product",
+                "operationId": "addbf076eeb234804b9ce83ee990a2dc",
                 "responses": {
                     "200": {
                         "description": "successful operation"
@@ -334,6 +972,33 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Size",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "Order by",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -342,9 +1007,6 @@
                     },
                     "401": {
                         "description": "Unauthorized user"
-                    },
-                    "404": {
-                        "description": "Product not found"
                     }
                 }
             }
@@ -414,6 +1076,85 @@
                 }
             }
         },
+        "/api/reviews/list": {
+            "get": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Get list of reviews",
+                "description": "Get list of reviews",
+                "operationId": "02a29a020185eea80b70c980bd44828c",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/reviews": {
+            "post": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Store a newly created resource in storage.",
+                "description": "Store a newly created resource in storage.",
+                "operationId": "cdb7614215c5ceee1610931fa2ac9521",
+                "requestBody": {
+                    "description": "Review store",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "product_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Product is good"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Content of reviews"
+                                    },
+                                    "stars": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "order_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "thumbnail": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "http://example.com/image.jpg"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
         "/api/auth/users/get-info": {
             "get": {
                 "tags": [
@@ -428,6 +1169,104 @@
                     },
                     "401": {
                         "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/auth/users/update-info": {
+            "put": {
+                "tags": [
+                    "Users Api"
+                ],
+                "summary": "Update user information",
+                "description": "Update user information",
+                "operationId": "e3b3c7ec7b8171cf5a6e2829b1dcaf14",
+                "requestBody": {
+                    "description": "Send user information",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "full_name": {
+                                        "type": "string",
+                                        "example": "Nguyen Van A"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "nguyenvana@gmail.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0909090909"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Ha Noi"
+                                    },
+                                    "about": {
+                                        "type": "string",
+                                        "example": "abc"
+                                    },
+                                    "avatar": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "example": "avatar.jpg"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/user/change_password": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Change password",
+                "description": "Change password",
+                "operationId": "4d32236718eb8aec3411c7ffa90bf24b",
+                "requestBody": {
+                    "description": "User info",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "password_confirm": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
                     }
                 }
             }
@@ -811,6 +1650,133 @@
                     },
                     "401": {
                         "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/orders/list": {
+            "get": {
+                "tags": [
+                    "Admin Order"
+                ],
+                "summary": "Get list of orders",
+                "description": "Get list of orders",
+                "operationId": "6545b4f9863c314434c9360c75aa036d",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Order status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "processing",
+                                "shipping",
+                                "delivered",
+                                "canceled",
+                                "deleted"
+                            ]
+                        },
+                        "example": "processing"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "User id",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/orders/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Get detail of an order",
+                "description": "Get detail of an order",
+                "operationId": "8416cae55f81e386d8c6c403c8348e10",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Order ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/orders/update/{id}": {
+            "put": {
+                "tags": [
+                    "Admin Order"
+                ],
+                "summary": "Update order status",
+                "description": "Update order status",
+                "operationId": "292014594beb6c22bb9ce3971bf07a46",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Order ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Order status",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "canceled",
+                                "completed"
+                            ]
+                        },
+                        "example": "canceled"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    },
+                    "404": {
+                        "description": "Order not found"
                     }
                 }
             }
@@ -1328,6 +2294,156 @@
                     }
                 }
             }
+        },
+        "/api/admin/revenues/list": {
+            "get": {
+                "tags": [
+                    "Revenue"
+                ],
+                "summary": "Get list of revenues",
+                "description": "Get list of revenues",
+                "operationId": "6ed81b71213397bf1d9d7d770dd690a3",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/admin/reviews/list": {
+            "get": {
+                "tags": [
+                    "Admin Review"
+                ],
+                "summary": "Get list of reviews",
+                "description": "Get list of reviews",
+                "operationId": "655b840cadc75fef07f0f530a4ddf69e",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
+        },
+        "/api/admin/reviews/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Admin Review"
+                ],
+                "summary": "Get detail of a review",
+                "description": "Get detail of a review",
+                "operationId": "25ecfa8da31de8e8b2c9b30ffd79ff27",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Review ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Review not found!"
+                    }
+                }
+            }
+        },
+        "/api/admin/reviews/update/{id}": {
+            "put": {
+                "tags": [
+                    "Admin Review"
+                ],
+                "summary": "Update a review",
+                "description": "Update a review",
+                "operationId": "7910868f81f1cbc11b20211d2e794c3e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Review ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Review status",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "description": "Review status",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    },
+                    "404": {
+                        "description": "Review not found!"
+                    },
+                    "400": {
+                        "description": "Error, Update error!"
+                    }
+                }
+            }
+        },
+        "/api/admin/reviews/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Admin Review"
+                ],
+                "summary": "Delete a review",
+                "description": "Delete a review",
+                "operationId": "bb26cc5213d8fae52f7a913250c2ba70",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Review ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized user"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -1346,6 +2462,18 @@
             "description": "Auth"
         },
         {
+            "name": "Cart",
+            "description": "Cart"
+        },
+        {
+            "name": "Checkout",
+            "description": "Checkout"
+        },
+        {
+            "name": "Order",
+            "description": "Order"
+        },
+        {
             "name": "Product",
             "description": "Product"
         },
@@ -1354,8 +2482,16 @@
             "description": "Property"
         },
         {
+            "name": "Review",
+            "description": "Review"
+        },
+        {
             "name": "Users Api",
             "description": "Users Api"
+        },
+        {
+            "name": "User",
+            "description": "User"
         },
         {
             "name": "Admin Attribute",
@@ -1366,12 +2502,24 @@
             "description": "Admin Category"
         },
         {
+            "name": "Admin Order",
+            "description": "Admin Order"
+        },
+        {
             "name": "Admin Product",
             "description": "Admin Product"
         },
         {
             "name": "Admin Property",
             "description": "Admin Property"
+        },
+        {
+            "name": "Revenue",
+            "description": "Revenue"
+        },
+        {
+            "name": "Admin Review",
+            "description": "Admin Review"
         }
     ],
     "security": [

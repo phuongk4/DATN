@@ -96,7 +96,7 @@ function ProductDetail() {
                         </div>
                         <div className="col-md-6">
                             <h2 className="text-black">{product.name}</h2>
-                            <p>{product.short_description}</p>
+                            <p dangerouslySetInnerHTML={{__html: product.short_description}}></p>
                             <p><strong className="text-primary h4">{product.price}</strong> VND</p>
                             <div className="list_option_">
                                 {
@@ -331,7 +331,8 @@ function ProductDetail() {
                                                             <h3><a className="text_truncate_"
                                                                    href={`/products/${product.id}`}>{product.name || "Product Name"}</a>
                                                             </h3>
-                                                            <p className="mb-0 text_truncate_2_">{product.short_description || "Finding perfect t-shirt"}</p>
+                                                            <p className="mb-0 text_truncate_2_"
+                                                               dangerouslySetInnerHTML={{__html: product.short_description}}></p>
                                                             <p className="text-primary font-weight-bold">${product.price || 50}</p>
                                                         </div>
                                                     </div>

@@ -188,7 +188,8 @@ function ProductList() {
                                             <div className="block-4-text p-4">
                                                 <h3><a className="text_truncate_2_ "
                                                        href={'/products/' + product.id}>{product.name}</a></h3>
-                                                <p className="mb-0 text_truncate_2_">{product.short_description}</p>
+                                                <p className="mb-0 text_truncate_2_"
+                                                   dangerouslySetInnerHTML={{__html: product.short_description}}></p>
                                                 <p className="text-primary font-weight-bold">{product.price}VND</p>
                                             </div>
                                         </div>

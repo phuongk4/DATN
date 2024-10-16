@@ -35,7 +35,8 @@ function DetailProduct() {
     const [attributes, setAttributes] = useState([]);
     const [properties, setProperties] = useState([]);
     const [loading, setLoading] = useState(true);
-    const editorRef = useRef(null);
+    const shortDescriptionRef = useRef(null);
+    const descriptionRef = useRef(null);
 
     let isFeature = false;
     let isHot = false;
@@ -170,19 +171,36 @@ function DetailProduct() {
 
         const formData = new FormData($('#formUpdate')[0]);
 
-        if (editorRef.current) {
-            const content = editorRef.current.getContent();
-            if (!content) {
-                alert('Mô tả sản phẩm không được bỏ trống!');
-                $('#btnCreate').prop('disabled', false).text('Tạo mới');
-                setLoading(false);
-                return;
-            }
+        // if (editorRef.current) {
+        //     const content = editorRef.current.getContent();
+        //     if (!content) {
+        //         alert('Mô tả sản phẩm không được bỏ trống!');
+        //         $('#btnCreate').prop('disabled', false).text('Tạo mới');
+        //         setLoading(false);
+        //         return;
+        //     }
+        //
+        //     formData.append('description', content);
+        // } else {
+        //     formData.append('description', $('#description').val() ?? '');
+        // }
 
-            formData.append('description', content);
-        } else {
-            formData.append('description', $('#description').val() ?? '');
+        const shortDescriptionContent = shortDescriptionRef.current.getContent();
+        const descriptionContent = descriptionRef.current.getContent();
+
+        if (!shortDescriptionContent) {
+            alert('Mô tả ngắn không được bỏ trống!');
+            setLoading(false);
+            return;
         }
+        if (!descriptionContent) {
+            alert('Mô tả không được bỏ trống!');
+            setLoading(false);
+            return;
+        }
+
+        formData.append('short_description', shortDescriptionContent);
+        formData.append('description', descriptionContent);
 
 
         formData.append('is_feature', isFeature);
@@ -239,7 +257,7 @@ function DetailProduct() {
             data_options.push(_data)
         })
 
-        formData.append('data_options', JSON.stringify(data_options))
+        formData.append('data_options', JSON.stringify(data_options));
 
         let fileDataOption = document.getElementsByName("option_thumbnail");
         let j = 0, length, imgOp, readerOp, fileOp;
@@ -300,10 +318,9 @@ function DetailProduct() {
         <div class="form-group col-md-5">
             <label for="attribute_item">Thuộc tính</label>
             <select name="attribute_item" class="form-select form_input_" onchange="getPropertyByAttribute(this)">
-                <option value="${el.attribute_item.id}">-- Chọn thuộc tính --</option>
                 ${attributes_option.map((attribute) =>
-                    `<option value="${attribute.id}">${attribute.name}</option>`)
-                }
+                    `<option value="${attribute.id}" ${attribute.id === el.attribute_item.id ? 'selected' : ''}>${attribute.name}</option>`
+                ).join('')}
             </select>
         </div>
         <div class="form-group col-md-5">
@@ -324,7 +341,7 @@ function DetailProduct() {
             <col width="8%"/>
             <col width="10%"/>
             <col width="10%"/>
-            <col width="8%"/>
+<!--            <col width="8%"/>-->
             <col width="5%"/>
         </colgroup>
         <thead>
@@ -338,7 +355,7 @@ function DetailProduct() {
                 <th>Số lượng</th>
                 <th>Giá cũ</th>
                 <th>Giá mới</th>
-                <th>Hình ảnh</th>
+                <th class="d-none">Hình ảnh</th>
                 <th></th>
             </tr>
         </thead>
@@ -356,7 +373,7 @@ function DetailProduct() {
                 <td>
                     <input type="number" class="form-control form_input_" name="option_sale_price" value="${_this.sale_price}" min="1" required/>
                 </td>
-                <td>
+                <td class="d-none">
                     <input type="file" class="form-control" name="option_thumbnail" />
                     <img src="${_this.thumbnail}" alt="" class="mt-3" width="200px">
                     <input type="text" class="d-none" name="option_thumbnail_uploaded" value="${_this.thumbnail}">
@@ -379,7 +396,7 @@ function DetailProduct() {
             <col width="8%"/>
             <col width="10%"/>
             <col width="10%"/>
-            <col width="8%"/>
+<!--            <col width="8%"/>-->
             <col width="5%"/>
         </colgroup>
         <thead>
@@ -393,7 +410,7 @@ function DetailProduct() {
                 <th>Số lượng</th>
                 <th>Giá cũ</th>
                 <th>Giá mới</th>
-                <th>Hình ảnh</th>
+               <th class="d-none">Hình ảnh</th>
                 <th></th>
             </tr>
         </thead>
@@ -413,8 +430,8 @@ function DetailProduct() {
                 <td>
                     <input type="number" class="form-control form_input_" name="option_sale_price" min="1" required/>
                 </td>
-                <td>
-                    <input type="file" class="form-control form_input_" name="option_thumbnail" required/>
+                <td class="d-none">
+                    <input type="file" class="form-control form_input_" name="option_thumbnail"/>
                     <input type="text" class="d-none" name="option_thumbnail_uploaded" value="no_image">
                 </td>
                 <td rowSpan="3" class="text-center align-middle">
@@ -424,15 +441,16 @@ function DetailProduct() {
         </tbody>
     </table>`;
 
-    const generatePropertyItem = () => `
+    const generatePropertyItem = (array_attr) => `
     <div class="row attribute_property_item_">
         <div class="form-group col-md-5">
             <label for="attribute_item">Thuộc tính</label>
             <select name="attribute_item" class="form-select form_input_" onchange="getPropertyByAttribute(this)">
                 <option value="">-- Chọn thuộc tính --</option>
-                ${attributes.map((attribute) =>
-        `<option value="${attribute.id}">${attribute.name}</option>`)
-    }
+                ${attributes
+        .filter((attribute) => !array_attr.includes(attribute.id))
+        .map((attribute) => `<option value="${attribute.id}">${attribute.name}</option>`)
+        .join('')}
             </select>
         </div>
         <div class="form-group col-md-5">
@@ -451,7 +469,21 @@ function DetailProduct() {
     }
 
     window.addProperty = function (el) {
-        $(el).closest('table').find('.list_option').append(generatePropertyItem());
+        let array_attr = [];
+        $(el).closest('table').find('.list_option .attribute_property_item_').each(function () {
+            let attr = $(this).find('select[name="attribute_item"]').val();
+            attr = parseInt(attr);
+            array_attr.push(attr)
+        })
+
+        array_attr = array_attr.filter(onlyUnique);
+
+        console.log(array_attr);
+        $(el).closest('table').find('.list_option').append(generatePropertyItem(array_attr));
+    }
+
+    function onlyUnique(value, index, array) {
+        return array.indexOf(value) === index;
     }
 
     window.removeTableOption = function (el) {
@@ -524,14 +556,49 @@ function DetailProduct() {
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="short_description">Mô tả ngắn</label>
-                                            <textarea className="form-control tinymce-editor form_input_" name="short_description"
-                                                      id="short_description" defaultValue={product.short_description}
-                                                      rows="10"></textarea>
+                                            {/*<textarea className="form-control tinymce-editor form_input_" name="short_description"*/}
+                                            {/*          id="short_description" defaultValue={product.short_description}*/}
+                                            {/*          rows="10"></textarea>*/}
+                                            <Editor
+                                                apiKey={API_KEY_TINYMCE}
+                                                onInit={(evt, editor) => shortDescriptionRef.current = editor}
+                                                init={{
+                                                    plugins: [
+                                                        'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+                                                        'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown',
+                                                    ],
+                                                    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                                                    tinycomments_mode: 'embedded',
+                                                    tinycomments_author: 'Author name',
+                                                    /**
+                                                     * The AI request function. This function is called when the AI button in the toolbar is clicked.
+                                                     * It should return a promise that resolves with a string containing the AI response.
+                                                     * The string should be a valid HTML string.
+                                                     * The function takes two parameters, `request` and `respondWith`. `request` is an object containing information about the request,
+                                                     * and `respondWith` is a function that should be called with the response string.
+                                                     * The `respondWith` function takes one parameter, a string containing the response.
+                                                     * The `respondWith` function should be called with a string containing the AI response.
+                                                     * The AI response should be a valid HTML string.
+                                                     * The function should return a promise.
+                                                     * The promise should resolve with a string containing the AI response.
+                                                     * The AI response should be a valid HTML string.
+                                                     * The AI request function should be a function.
+                                                     * @param {object} request - The request object.
+                                                     * @param {function} respondWith - The respondWith function.
+                                                     * @returns {Promise<string>} - A promise that resolves with a string containing the AI response.
+                                                     */
+                                                    ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+                                                }}
+                                                id="short_description"
+                                                name="short_description"
+                                                initialValue={product.short_description}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="description">Mô tả</label>
                                             <Editor
                                                 apiKey={API_KEY_TINYMCE}
+                                                onInit={(evt, editor) => descriptionRef.current = editor}
                                                 init={{
                                                     plugins: [
                                                         'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
