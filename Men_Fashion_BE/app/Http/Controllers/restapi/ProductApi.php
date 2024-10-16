@@ -180,7 +180,9 @@ class ProductApi extends Api
 
                 $properties = $result[$attribute_name]['properties'];
 
-                $result[$attribute_name]['properties'] = array_unique($properties, SORT_REGULAR);
+//                $properties = array_unique($properties, SORT_REGULAR);
+                $cleanArray = $this->removeDuplicates($properties);
+                $result[$attribute_name]['properties'] = $cleanArray;
             }
         }
 
@@ -190,6 +192,15 @@ class ProductApi extends Api
 
         $result = array_values($result);
         return $result;
+    }
+
+    private function removeDuplicates($array)
+    {
+        $unique = [];
+        foreach ($array as $item) {
+            $unique[$item['id']] = $item;
+        }
+        return array_values($unique);
     }
 
     /**

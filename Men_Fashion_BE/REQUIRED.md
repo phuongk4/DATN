@@ -6,7 +6,7 @@
 6. php artisan key:generate
 7. php artisan vendor:publish --tag=laravel-pagination
 8. php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
-9. php artisan l5-swagger:generate (ren api)
+9. php artisan l5-swagger:generate
 10. php artisan vendor:publish --provider "Tymon\JWTAuth\Providers\LaravelServiceProvider"
 11. php artisan jwt:secret
 12. php artisan storage:link
