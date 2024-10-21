@@ -5,7 +5,7 @@ const API_ENDPOINT = {
     LIST_PRODUCT: "/api/products/list",
     DETAIL_PRODUCT: "/api/products/detail/",
     SEARCH_PRODUCT: "/api/products/search",
-    GET_PRODUCT_OPTION: "/api/products/get-info",
+    GET_PRODUCT_OPTION: "/api/products/search",
     // ADMIN
     ADMIN_LIST_PRODUCT: "/api/admin/products/list",
     ADMIN_DETAIL_PRODUCT: "/api/admin/products/detail/",

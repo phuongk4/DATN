@@ -32,7 +32,7 @@ Route::group(['prefix' => 'api'], function () {
 });
 
 /* Auth api */
-Route::group(['prefix' => 'api/auth', 'middleware' => ['auth.api']], function () {
+Route::group(['prefix' => 'api', 'middleware' => ['auth.api']], function () {
     require_once __DIR__ . '/api/auth.php';
 });
 

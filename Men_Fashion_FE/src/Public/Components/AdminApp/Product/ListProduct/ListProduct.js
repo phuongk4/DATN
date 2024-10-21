@@ -40,7 +40,6 @@ function ListProduct() {
             await productService.adminDeleteProduct(id)
                 .then((res) => {
                     setLoading(false);
-                    console.log("delete", res.data)
                     alert(`Xóa thành công`)
                     getListProduct();
                 })
@@ -169,7 +168,6 @@ function ListProduct() {
         await productService.adminListProduct()
             .then((res) => {
                 if (res.status === 200) {
-                    console.log("data", res.data)
                     setData(res.data.data)
                     setLoading(false)
                 }

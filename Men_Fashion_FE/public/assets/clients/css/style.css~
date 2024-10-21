@@ -1192,7 +1192,7 @@ a:hover {
 }
 
 .productDetail .font-weight-bold {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .product_category .active {

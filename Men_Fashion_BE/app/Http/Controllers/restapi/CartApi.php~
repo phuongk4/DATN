@@ -40,7 +40,9 @@ class CartApi extends Api
                 $cart['product'] = $product->toArray();
 
                 $val = $item->values;
-                $dataArray = json_decode($val, true);
+                $product_option = ProductOptions::find($val);
+                $dataArray = $product_option->value;
+                $dataArray = json_decode($dataArray, true);
 
                 $dataConvert = [];
                 foreach ($dataArray as $op) {
@@ -123,12 +125,13 @@ class CartApi extends Api
             if (!$values) {
                 $option_default = ProductOptions::where('product_id', $product_id)->first();
                 if ($option_default) {
-                    $values = $option_default->value;
+                    $values = $option_default->id;
                 }
             }
 
             $cart = Carts::where('user_id', $user_id)
                 ->where('product_id', $product_id)
+                ->where('values', $values)
                 ->first();
 
             if ($cart) {
@@ -140,7 +143,6 @@ class CartApi extends Api
                 }
 
                 $cart->quantity = $quantity;
-                $cart->values = $values;
                 $cart->save();
             } else {
                 $cart = new Carts();
@@ -164,19 +166,16 @@ class CartApi extends Api
     /**
      * Change quantity of a product in cart
      *
-     * @OA\Post(
+     * @OA\Put(
      *     path="/api/carts/change-quantity/{id}",
      *     summary="Change quantity of a product in cart",
      *     tags={"Cart"},
      *     @OA\Parameter(
-     *         description="ID of cart",
      *         in="path",
      *         name="id",
      *         required=true,
-     *         @OA\Schema(
-     *             type="integer",
-     *             format="int64"
-     *         )
+     *         description="Cart ID",
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\RequestBody(
      *         @OA\JsonContent(
@@ -184,34 +183,15 @@ class CartApi extends Api
      *             @OA\Property(
      *                 property="quantity",
      *                 type="integer",
-     *                 example=2
+     *                 example=1,
+     *                 description="Quantity of product"
      *             )
      *         )
      *     ),
      *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=401, description="Unauthorized"),
      *     @OA\Response(response=404, description="Cart not found!"),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Success",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="status",
-     *                 type="integer",
-     *                 example=1
-     *             ),
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Success"
-     *             ),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="object",
-     *                 ref="#/components/schemas/Cart"
-     *             )
-     *         )
-     *     )
+     *     @OA\Response(response=500, description="Internal Server Error")
      * )
      */
     public function changeQuantity($id, Request $request)

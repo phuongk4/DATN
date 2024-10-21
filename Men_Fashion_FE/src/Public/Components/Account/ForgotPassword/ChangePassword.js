@@ -23,7 +23,6 @@ function ChangePassword() {
         }
         await authService.changePasswordForgot(data)
             .then((res) => {
-                console.log("change-password", res.data)
                 localStorage.clear();
                 alert('Đổi mật khẩu tài khoản thành công! Vui lòng đăng nhập để tiếp tục...')
                 window.location.href = '/login';
