@@ -1,0 +1,9 @@
+import $ from 'jquery';
+
+function ConvertNumber(num) {
+    num = parseInt(num);
+    let formattedNumber = num.toLocaleString('de-DE');
+    return formattedNumber
+}
+
+export default ConvertNumber

@@ -180,7 +180,9 @@ class ProductApi extends Api
 
                 $properties = $result[$attribute_name]['properties'];
 
-                $result[$attribute_name]['properties'] = array_unique($properties, SORT_REGULAR);
+//                $properties = array_unique($properties, SORT_REGULAR);
+                $cleanArray = $this->removeDuplicates($properties);
+                $result[$attribute_name]['properties'] = $cleanArray;
             }
         }
 
@@ -191,6 +193,68 @@ class ProductApi extends Api
         $result = array_values($result);
         return $result;
     }
+
+    private function removeDuplicates($array)
+    {
+        $unique = [];
+        foreach ($array as $item) {
+            $unique[$item['id']] = $item;
+        }
+        return array_values($unique);
+    }
+
+    public function getInfo(Request $request)
+    {
+        $product_id = $request->input('id');
+        $value = $request->input('op');
+
+        $product = Products::find($product_id);
+
+        if (!$product || $product->status != ProductStatus::ACTIVE) {
+            $data = returnMessage(-1, null, 'Product not found!');
+            return response()->json($data, 404);
+        }
+
+        $product_option = ProductOptions::where('product_id', $product_id);
+        $arr_value = explode(',', $value);
+
+        foreach ($arr_value as $property) {
+            $product_option->whereJsonContains('value', ['property_item' => $property]);
+        }
+
+
+        $res = returnMessage(1, $product, 'Success!');
+        return response()->json($res, 200);
+    }
+
+//    public function getInfo(Request $request)
+//    {
+//        $product_id = $request->input('product_id');
+//        $value = $request->input('value');
+//
+//        $product = Products::find($product_id);
+//
+//        if (!$product || $product->status != ProductStatus::ACTIVE) {
+//            $data = returnMessage(-1, null, 'Product not found!');
+//            return response()->json($data, 404);
+//        }
+//
+//        $product_option = ProductOptions::where('product_id', $product->id)->where('value', $value)->first();
+//
+//        $op = $product_option->value;
+//
+//        $array_value[] = json_decode($op, true);
+//
+//        $ops = $this->mergeOption($array_value);
+//
+//        $product = $product->toArray();
+//
+//        $product['list_options'] = $product_option->toArray();
+//        $product['options'] = $ops;
+//
+//        $res = returnMessage(1, $product, 'Success!');
+//        return response()->json($res, 200);
+//    }
 
     /**
      * @OA\Get(
@@ -234,6 +298,33 @@ class ProductApi extends Api
      *             type="string"
      *         )
      *     ),
+     *     @OA\Parameter(
+     *         description="Size",
+     *         in="query",
+     *         name="size",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         description="Sort",
+     *         in="query",
+     *         name="sort",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         description="Order by",
+     *         in="query",
+     *         name="order_by",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="successful operation"
@@ -241,19 +332,18 @@ class ProductApi extends Api
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized user"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Product not found"
      *     )
      * )
      */
     public function search(Request $request)
     {
-        $category_id = $request->input('category_id') ?? '';
-        $min_price = $request->input('min_price') ?? '';
-        $max_price = $request->input('max_price') ?? '';
-        $keyword = $request->input('keyword') ?? '';
+        $category_id = $request->input('category');
+        $size = $request->input('size');
+        $sort = $request->input('sort');
+        $order_by = $request->input('order');
+        $min_price = $request->input('minPrice');
+        $max_price = $request->input('maxPrice');
+        $keyword = $request->input('keyword');
 
         $products = Products::where('status', ProductStatus::ACTIVE)
             ->when($category_id, function ($query) use ($category_id) {
@@ -263,26 +353,36 @@ class ProductApi extends Api
             })
             ->when($min_price, function ($query) use ($min_price) {
                 if (!empty($min_price)) {
-                    $query->where('price', '>=', $min_price);
+                    $query->where('sale_price', '>=', $min_price);
                 }
             })
             ->when($max_price, function ($query) use ($max_price) {
                 if (!empty($max_price)) {
-                    $query->where('price', '<=', $max_price);
+                    $query->where('sale_price', '<=', $max_price);
                 }
             })
             ->when($keyword, function ($query) use ($keyword) {
                 if (!empty($keyword)) {
                     $query->where('name', 'like', '%' . $keyword . '%');
                 }
-            })
-            ->when($keyword, function ($query) use ($keyword) {
-                if (!empty($keyword)) {
-                    $query->where('description', 'like', '%' . $keyword . '%');
-                }
-            })
-            ->orderByDesc('id')
-            ->get();
+            });
+
+        if (isset($sort) && isset($order_by) && $sort === 'asc') {
+            $products = $products->orderBy($order_by, $sort);
+        } elseif (isset($sort) && !isset($order_by) && $sort === 'asc') {
+            $products = $products->orderBy('id', $sort);
+        } elseif (isset($order_by)) {
+            $products = $products->orderBy($order_by, 'desc');
+        } else {
+            $products = $products->orderBy('id', 'desc');
+        }
+
+        if ($size) {
+            $size = (int)$size;
+            $products->limit($size);
+        }
+
+        $products = $products->get();
 
         $data = returnMessage(1, $products, 'Success!');
         return response()->json($data, 200);

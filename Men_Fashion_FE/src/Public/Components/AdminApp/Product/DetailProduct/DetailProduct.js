@@ -45,7 +45,6 @@ function DetailProduct() {
         await productService.adminDetailProduct(id)
             .then((res) => {
                 if (res.status === 200) {
-                    console.log("product", res.data.data)
                     setProduct(res.data.data)
                     setLoading(false)
                     renderImage(res.data.data.gallery, res.data.data.name)
@@ -365,7 +364,7 @@ function DetailProduct() {
                     <div class="list_option">` + sup_html_ + `</div>
                 </td>
                 <td>
-                    <input type="number" class="form-control form_input_" name="option_quantity" value="${_this.quantity}" required/>
+                    <input type="number" min="1" class="form-control form_input_" name="option_quantity" value="${_this.quantity}" required/>
                 </td>
                 <td>
                     <input type="number" class="form-control form_input_" name="option_price" value="${_this.price}" min="1" required/>
@@ -422,7 +421,7 @@ function DetailProduct() {
                     </div>
                 </td>
                 <td>
-                    <input type="number" class="form-control form_input_" name="option_quantity" required/>
+                    <input type="number" min="1" class="form-control form_input_" name="option_quantity" required/>
                 </td>
                 <td>
                     <input type="number" class="form-control form_input_" name="option_price" min="1" required/>
@@ -478,7 +477,6 @@ function DetailProduct() {
 
         array_attr = array_attr.filter(onlyUnique);
 
-        console.log(array_attr);
         $(el).closest('table').find('.list_option').append(generatePropertyItem(array_attr));
     }
 
@@ -537,19 +535,21 @@ function DetailProduct() {
                                         <div className="row">
                                             <div className="form-group col-md-4">
                                                 <label htmlFor="price">Giá cũ</label>
-                                                <input type="number" className="form-control form_input_" id="price"
+                                                <input type="number" min="1" className="form-control form_input_"
+                                                       id="price"
                                                        defaultValue={product.price} name="price" required/>
                                             </div>
                                             <div className="form-group col-md-4">
                                                 <label htmlFor="sale_price">Giá mới</label>
                                                 <input type="number" className="form-control form_input_"
-                                                       id="sale_price"
+                                                       id="sale_price" min="1"
                                                        name="sale_price" defaultValue={product.sale_price}
                                                        required/>
                                             </div>
                                             <div className="form-group col-md-4">
                                                 <label htmlFor="quantity">Số lượng</label>
-                                                <input type="number" className="form-control form_input_" id="quantity"
+                                                <input type="number" min="1" className="form-control form_input_"
+                                                       id="quantity"
                                                        name="quantity" defaultValue={product.quantity}
                                                        required/>
                                             </div>

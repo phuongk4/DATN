@@ -29,7 +29,6 @@ function ListProperty() {
         if (window.confirm('Bạn có chắc chắn muốn xóa?')) {
             await propertyService.adminDeleteProperty(id)
                 .then((res) => {
-                    console.log("delete", res.data)
                     alert(`Xóa thành công!`)
                     getListProperty();
                     setLoading(false)
@@ -105,7 +104,6 @@ function ListProperty() {
         await propertyService.adminListProperty()
             .then((res) => {
                 if (res.status === 200) {
-                    console.log("data", res.data)
                     setData(res.data.data)
                     setLoading(false)
                 } else {

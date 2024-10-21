@@ -40,7 +40,9 @@ class CartApi extends Api
                 $cart['product'] = $product->toArray();
 
                 $val = $item->values;
-                $dataArray = json_decode($val, true);
+                $product_option = ProductOptions::find($val);
+                $dataArray = $product_option->value;
+                $dataArray = json_decode($dataArray, true);
 
                 $dataConvert = [];
                 foreach ($dataArray as $op) {
@@ -55,6 +57,7 @@ class CartApi extends Api
                     $dataConvert[] = $data;
                 }
                 $cart['attribute'] = $dataConvert;
+                $cart['product_option'] = $product_option->toArray();
                 return $cart;
             });
 
@@ -123,12 +126,13 @@ class CartApi extends Api
             if (!$values) {
                 $option_default = ProductOptions::where('product_id', $product_id)->first();
                 if ($option_default) {
-                    $values = $option_default->value;
+                    $values = $option_default->id;
                 }
             }
 
             $cart = Carts::where('user_id', $user_id)
                 ->where('product_id', $product_id)
+                ->where('values', $values)
                 ->first();
 
             if ($cart) {
@@ -140,7 +144,6 @@ class CartApi extends Api
                 }
 
                 $cart->quantity = $quantity;
-                $cart->values = $values;
                 $cart->save();
             } else {
                 $cart = new Carts();

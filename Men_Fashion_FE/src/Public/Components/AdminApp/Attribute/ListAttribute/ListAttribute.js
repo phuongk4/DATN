@@ -40,7 +40,6 @@ function ListAttribute() {
         if (window.confirm('Bạn có chắc chắn muốn xóa?')) {
             await attributeService.adminDeleteAttribute(id)
                 .then((res) => {
-                    console.log("delete", res.data)
                     alert(`Xóa thành công!`)
                     getListAttribute();
                 })
@@ -144,7 +143,6 @@ function ListAttribute() {
         await attributeService.adminListAttribute()
             .then((res) => {
                 if (res.status === 200) {
-                    console.log("data", res.data)
                     setData(res.data.data)
                     setLoading(false)
                 } else {

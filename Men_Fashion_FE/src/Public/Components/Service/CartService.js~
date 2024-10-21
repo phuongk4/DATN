@@ -47,7 +47,7 @@ class CartService {
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             }
         };
-        return axios.post(BASE_URL_SERVER + API_ENDPOINT.DELETE_CART + id, '', config);
+        return axios.post(BASE_URL_SERVER + API_ENDPOINT.DELETE_CART + id, config);
     }
 
     clearCart = () => {
@@ -57,7 +57,7 @@ class CartService {
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             }
         };
-        return axios.post(BASE_URL_SERVER + API_ENDPOINT.CLEAR_CART, '', config);
+        return axios.post(BASE_URL_SERVER + API_ENDPOINT.CLEAR_CART, config);
     }
 }
 

@@ -50,7 +50,6 @@ function Header() {
         await accountService.getInfo()
             .then((res) => {
                 setData(res.data);
-                console.log("data:", JSON.parse(JSON.stringify(res.data)));
                 let user = JSON.parse(JSON.stringify(res.data.data));
                 setData(user);
             })

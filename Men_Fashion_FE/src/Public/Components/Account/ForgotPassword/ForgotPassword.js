@@ -20,7 +20,6 @@ function ForgotPassword() {
         }
         await authService.forgotPassword(data)
             .then((res) => {
-                console.log("forgot password", res.data)
                 localStorage.setItem("email", data.email);
                 alert('Thành công! Vui lòng kiểm tra mã xác minh gửi đến email của bạn...');
                 window.location.href = '/change-password';

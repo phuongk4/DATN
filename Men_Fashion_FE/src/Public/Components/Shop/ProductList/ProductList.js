@@ -5,32 +5,27 @@ import Header from "../../Shared/Client/Header/Header";
 import Footer from "../../Shared/Client/Footer/Footer";
 import productService from "../../Service/ProductService";
 import $ from "jquery";
+import ConvertNumber from "../../Shared/Utils/ConvertNumber";
+import categoryService from "../../Service/CategoryService";
 
+/**
+ * The main component for the product list page.
+ * It renders a list of products with pagination, filtering by category, price range, and product properties.
+ * @returns {ReactElement} The rendered component.
+ */
 function ProductList() {
     const [loading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
     const [attributes, setAttributes] = useState([]);
     const [newProducts, setNewProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
 
     const getListProduct = async () => {
         await productService.listProduct('', sort_param)
             .then((res) => {
                 if (res.status === 200) {
-                    console.log("data", res.data)
                     setNewProducts(res.data.data)
                     setLoading(false)
-
-                    // const productsPerPage = size_param ?? 12;
-                    // const totalPages = Math.ceil(newProducts.length / productsPerPage);
-                    // const indexOfLastProduct = currentPage * productsPerPage;
-                    // const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-                    // const currentProducts = newProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-
-                    // setProductsPerPage(size_param ?? 12);
-                    // setTotalPages(Math.ceil(newProducts.length / productsPerPage));
-                    // setIndexOfLastProduct(currentPage * productsPerPage);
-                    // setIndexOfFirstProduct(indexOfLastProduct - productsPerPage);
-                    // setCurrentProducts(newProducts.slice(indexOfFirstProduct, indexOfLastProduct));
                 }
             })
             .catch((err) => {
@@ -70,8 +65,6 @@ function ProductList() {
     let indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     let currentProducts = newProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-    console.log(newProducts.length, totalPages);
-
     const handleClick = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
@@ -85,7 +78,6 @@ function ProductList() {
         let minPrice = minPriceID ?? $('#min-price').val() ?? '';
         let maxPrice = maxPriceID ?? $('#max-price').val() ?? '';
         let searchUrl = `${baseurl}?keyword=${keyword}&size=${size}&category=${category}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
-        console.log(searchUrl);
         window.location.href = searchUrl;
     }
 
@@ -93,7 +85,6 @@ function ProductList() {
         await attributeService.listAttribute()
             .then((res) => {
                 if (res.status === 200) {
-                    console.log("attribute", res.data.data)
                     setAttributes(res.data.data);
                 }
             })
@@ -124,8 +115,21 @@ function ProductList() {
         searchMainProduct(null, null, null, null, null, null);
     }
 
+    const getListCategory = async () => {
+        await categoryService.listCategory()
+            .then((res) => {
+                if (res.status === 200) {
+                    setCategories(res.data.data);
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
     useEffect(() => {
         getListProduct();
+        getListCategory();
         getListAttribute();
     }, [loading, size_param, sort_param, category_param, minPrice_param, maxPrice_param, keyword_param]);
 
@@ -190,7 +194,7 @@ function ProductList() {
                                                        href={'/products/' + product.id}>{product.name}</a></h3>
                                                 <p className="mb-0 text_truncate_2_"
                                                    dangerouslySetInnerHTML={{__html: product.short_description}}></p>
-                                                <p className="text-primary font-weight-bold">{product.price}VND</p>
+                                                <p className="text-primary font-weight-bold">{ConvertNumber(product.sale_price)}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -225,12 +229,18 @@ function ProductList() {
                             <div className="border p-4 rounded mb-4">
                                 <h3 className="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
                                 <ul className="list-unstyled mb-0">
-                                    <li className="mb-1"><a href="#" className="d-flex"><span>Men</span> <span
-                                        className="text-black ml-auto">(2,220)</span></a></li>
-                                    <li className="mb-1"><a href="#" className="d-flex"><span>Women</span> <span
-                                        className="text-black ml-auto">(2,550)</span></a></li>
-                                    <li className="mb-1"><a href="#" className="d-flex"><span>Children</span> <span
-                                        className="text-black ml-auto">(2,124)</span></a></li>
+                                    {
+                                        categories.map((category) => (
+                                            <li className="mb-1" key={category.id}>
+                                                <a href={'/products?category=' + category.id} data-id={category.id}
+                                                   className={`d-flex category${category_param}`}
+                                                   onClick={handleClick}>
+                                                    <span>{category.name}</span>
+                                                    <span className="text-black ml-auto">({category.count})</span>
+                                                </a>
+                                            </li>
+                                        ))
+                                    }
                                 </ul>
                             </div>
 
@@ -238,10 +248,10 @@ function ProductList() {
                                 <div className="mb-4">
                                     <h3 className="mb-3 h6 text-uppercase text-black d-block">Filter by Price</h3>
                                     <div className="form-group d-flex align-items-center justify-content-between gap-3">
-                                        <input type="number" name="min-price" id="min-price"
+                                        <input type="number" name="min-price" id="min-price" min="0"
                                                className="form-control border"/>
                                         <span>-</span>
-                                        <input type="number" name="max-price" id="max-price"
+                                        <input type="number" name="max-price" id="max-price" min="1"
                                                className="form-control border"/>
                                     </div>
                                 </div>

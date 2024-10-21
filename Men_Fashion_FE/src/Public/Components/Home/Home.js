@@ -33,7 +33,6 @@ function Home() {
         await productService.listProduct('', '')
             .then((res) => {
                 if (res.status === 200) {
-                    console.log("data", res.data)
                     setNewProducts(res.data.data)
                     setLoading(false)
                 }

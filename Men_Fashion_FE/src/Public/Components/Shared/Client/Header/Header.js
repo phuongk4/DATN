@@ -22,8 +22,7 @@ function NoLogin() {
 
 function YesLogin() {
     const userId = sessionStorage.getItem("id")
-
-    const [carts, setCarts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const handlelogout = () => {
         sessionStorage.clear();
@@ -32,24 +31,24 @@ function YesLogin() {
     }
 
     const getListCart = async () => {
-        // await cartService.listCart(userId)
-        //     .then((res) => {
-        //         if (res.status === 200) {
-        //             console.log("data", res.data)
-        //             let count = res.data.length;
-        //             $('#countCart').text(count);
-        //         } else {
-        //             alert('Error')
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.log(err)
-        //     })
+        await cartService.listCart()
+            .then((res) => {
+                if (res.status === 200) {
+                    setLoading(false)
+                    let count = res.data.data.length;
+                    console.log(count);
+                    $('#countCart').text(count);
+                }
+            })
+            .catch((err) => {
+                setLoading(false)
+                console.log(err)
+            })
     }
 
     useEffect(() => {
         getListCart();
-    }, []);
+    }, [loading]);
 
     return (
         <div className="site-top-icons">
@@ -105,7 +104,6 @@ function HeaderClient() {
         await categoryService.listCategory()
             .then((res) => {
                 if (res.status === 200) {
-                    console.log("category", res.data.data)
                     setCategories(res.data.data);
                 } else {
                     alert('Error')

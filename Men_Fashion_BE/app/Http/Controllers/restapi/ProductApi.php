@@ -203,30 +203,10 @@ class ProductApi extends Api
         return array_values($unique);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/products/get-info",
-     *     summary="Get info of a product",
-     *     description="Get info of a product",
-     *     tags={"Product"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized user"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Product not found"
-     *     )
-     * )
-     */
     public function getInfo(Request $request)
     {
-        $product_id = $request->input('product_id');
-        $value = $request->input('value');
+        $product_id = $request->input('id');
+        $value = $request->input('op');
 
         $product = Products::find($product_id);
 
@@ -235,22 +215,47 @@ class ProductApi extends Api
             return response()->json($data, 404);
         }
 
-        $product_option = ProductOptions::where('product_id', $product->id)->where('value', $value)->first();
+        $product_option = ProductOptions::where('product_id', $product_id);
+        $arr_value = explode(',', $value);
 
-        $op = $product_option->value;
+        foreach ($arr_value as $property) {
+            $product_option->whereJsonContains('value', ['property_item' => $property]);
+        }
 
-        $array_value[] = json_decode($op, true);
+        $product_option = $product_option->first();
 
-        $ops = $this->mergeOption($array_value);
-
-        $product = $product->toArray();
-
-        $product['list_options'] = $product_option->toArray();
-        $product['options'] = $ops;
-
-        $res = returnMessage(1, $product, 'Success!');
+        $res = returnMessage(1, $product_option, 'Success!');
         return response()->json($res, 200);
     }
+
+//    public function getInfo(Request $request)
+//    {
+//        $product_id = $request->input('product_id');
+//        $value = $request->input('value');
+//
+//        $product = Products::find($product_id);
+//
+//        if (!$product || $product->status != ProductStatus::ACTIVE) {
+//            $data = returnMessage(-1, null, 'Product not found!');
+//            return response()->json($data, 404);
+//        }
+//
+//        $product_option = ProductOptions::where('product_id', $product->id)->where('value', $value)->first();
+//
+//        $op = $product_option->value;
+//
+//        $array_value[] = json_decode($op, true);
+//
+//        $ops = $this->mergeOption($array_value);
+//
+//        $product = $product->toArray();
+//
+//        $product['list_options'] = $product_option->toArray();
+//        $product['options'] = $ops;
+//
+//        $res = returnMessage(1, $product, 'Success!');
+//        return response()->json($res, 200);
+//    }
 
     /**
      * @OA\Get(
