@@ -6,12 +6,13 @@ import Header from '../../../Shared/Admin/Header/Header';
 import Sidebar from '../../../Shared/Admin/Sidebar/Sidebar';
 import $ from 'jquery';
 
-function DetailCategory() {
+function UpdateCategory() {
     const [category, setCategory] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const {id} = useParams();
     const [form] = Form.useForm();
+    const navigate = useNavigate();
 
     const detailCategory = async () => {
         await categoryService.adminDetailCategory(id)
@@ -49,17 +50,46 @@ function DetailCategory() {
         getListCategory();
     }, [form, id, loading])
 
-    return (<>
+
+    const onFinish = async () => {
+        $('#btnUpdate').prop('disabled', true).text('Đang lưu...');
+
+        let inputs = $('#formUpdate input, #formUpdate textarea');
+        for (let i = 0; i < inputs.length; i++) {
+            if (!$(inputs[i]).val() && $(inputs[i]).attr('type') !== 'file') {
+                let text = $(inputs[i]).prev().text();
+                alert(text + ' không được bỏ trống!');
+                $('#btnUpdate').prop('disabled', false).text('Lưu thay đổi');
+                return
+            }
+        }
+
+        const formData = new FormData($('#formUpdate')[0]);
+
+        await categoryService.adminUpdateCategory(id, formData)
+            .then((res) => {
+                message.success("Thay đổi thành công")
+                navigate("/admin/categories/list")
+            })
+            .catch((err) => {
+                console.log(err)
+                message.error(err.response.data.message)
+                $('#btnUpdate').prop('disabled', false).text('Lưu thay đổi');
+            })
+    };
+
+    return (
+        <>
             <Header/>
             <Sidebar/>
             <main id="main" className="main">
                 <div className="pagetitle">
-                    <h1>Chi tiết danh mục</h1>
+                    <h1>Chỉnh sửa danh mục</h1>
                     <nav>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item"><Link to="/admin/dashboard">Trang quản trị</Link></li>
                             <li className="breadcrumb-item">Danh mục</li>
-                            <li className="breadcrumb-item active">Chi tiết danh mục</li>
+                            <li className="breadcrumb-item active">Chỉnh sửa danh mục</li>
                         </ol>
                     </nav>
                 </div>
@@ -69,35 +99,45 @@ function DetailCategory() {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <h5 className="card-title">Chi tiết danh mục</h5>
-                                    <Form>
+                                    <h5 className="card-title">Chỉnh sửa danh mục</h5>
+                                    <Form onFinish={onFinish} id="formUpdate">
                                         <div className="form-group">
                                             <label htmlFor="name">Tên danh mục</label>
                                             <input type="text" name="name" className="form-control" id="name"
-                                                   value={category.name} disabled required/>
+                                                   defaultValue={category.name} required/>
                                         </div>
                                         <div className="row">
                                             <div className="form-group col-md-4">
+                                                <label htmlFor="thumbnail">Hình ảnh</label>
+                                                <input type="file" name="thumbnail" className="form-control"
+                                                       id="thumbnail"/>
+
                                                 <img src={category.thumbnail} alt={category.name} width="200px"
                                                      className="mt-2"/>
                                             </div>
                                             <div className="form-group col-md-4">
                                                 <label htmlFor="parent_id">Danh mục cha</label>
-                                                <select id="parent_id" name="parent_id" className="form-select" disabled>
+                                                <select id="parent_id" name="parent_id" className="form-select">
                                                     <option value="">Chọn danh mục cha</option>
-                                                    {categories.map((item, index) => {
-                                                        if (item.id === category.parent_id) {
-                                                            return (<option selected
-                                                                            value={item.id}>{item.name}</option>)
-                                                        } else {
-                                                            return (<option value={item.id}>{item.name}</option>)
-                                                        }
-                                                    })}
+                                                    {
+                                                        categories.map((item, index) => {
+                                                            if (item.id === category.parent_id) {
+                                                                return (
+                                                                    <option selected
+                                                                            value={item.id}>{item.name}</option>
+                                                                )
+                                                            } else {
+                                                                return (
+                                                                    <option value={item.id}>{item.name}</option>
+                                                                )
+                                                            }
+                                                        })
+                                                    }
                                                 </select>
                                             </div>
                                             <div className="form-group col-md-4">
                                                 <label htmlFor="status">Trạng thái</label>
-                                                <select id="status" name="status" className="form-select" disabled>
+                                                <select id="status" name="status" className="form-select">
                                                     <option selected={category.status === "ĐANG HOẠT ĐỘNG"}
                                                             value="ĐANG HOẠT ĐỘNG">ĐANG HOẠT ĐỘNG
                                                     </option>
@@ -107,9 +147,8 @@ function DetailCategory() {
                                                 </select>
                                             </div>
                                         </div>
-                                        <a href={'/admin/categories/update/' + id} className="btn btn-primary mt-3">Chỉnh
-                                            sửa
-                                        </a>
+                                        <button type="submit" id="btnUpdate" className="btn btn-primary mt-3">Lưu lại
+                                        </button>
                                     </Form>
                                 </div>
                             </div>
@@ -117,7 +156,8 @@ function DetailCategory() {
                     </div>
                 </section>
             </main>
-        </>)
+        </>
+    )
 }
 
-export default DetailCategory
+export default UpdateCategory
