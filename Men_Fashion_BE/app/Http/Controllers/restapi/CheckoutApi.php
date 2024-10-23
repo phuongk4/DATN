@@ -372,7 +372,7 @@ class CheckoutApi extends Api
      * @param \Illuminate\Http\Request $request
      * @return boolean
      */
-    private function handleCheckout($request)
+    private function handleCheckout(Request $request)
     {
         $order = new Orders();
 
@@ -385,8 +385,8 @@ class CheckoutApi extends Api
         $c_address = $request->input('c_address');
         $d_address = $request->input('d_address');
         $total_product = $request->input('c_total_product');
-        $shipping_price = $request->input('c_shipping_price');
-        $discount_price = $request->input('c_discount_price');
+        $shipping_price = $request->input('c_shipping_price') ?? 0;
+        $discount_price = $request->input('c_discount_price') ?? 0;
         $total = $request->input('c_total');
         $notes = $request->input('c_order_notes');
         $order_method = $request->input('order_method') ?? OrderMethod::IMMEDIATE;

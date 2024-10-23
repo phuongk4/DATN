@@ -38,7 +38,7 @@ Route::group(['prefix' => 'orders'], function () {
 });
 
 Route::group(['prefix' => 'checkout'], function () {
-    Route::post('checkout', [CheckoutApi::class, 'checkout'])->name('api.auth.checkout');
+    Route::post('create', [CheckoutApi::class, 'checkout'])->name('api.auth.checkout');
     Route::post('checkout_vnpay', [CheckoutApi::class, 'checkoutByVNPay'])->name('api.auth.checkout.vnpay');
     Route::post('return_checkout_vnpay', [CheckoutApi::class, 'returnCheckout'])->name('api.auth.checkout.return');
 });

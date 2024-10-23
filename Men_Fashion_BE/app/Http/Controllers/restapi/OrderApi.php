@@ -6,7 +6,9 @@ use App\Enums\OrderStatus;
 use App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Attributes;
+use App\Models\OrderItems;
 use App\Models\Orders;
+use App\Models\Products;
 use App\Models\Properties;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
@@ -58,7 +60,8 @@ class OrderApi extends Api
             ->cursor()
             ->map(function ($item) {
                 $order = $item->toArray();
-                $order['order_items'] = $item->order_items;
+                $order_items = OrderItems::where('order_id', $item->id)->get();
+                $order['order_items'] = $order_items->toArray();
                 return $order;
             });
 
@@ -157,10 +160,13 @@ class OrderApi extends Api
             $order->status = OrderStatus::CANCELED;
             $order->save();
 
-            $order->order_items->each(function ($item) {
-                $item->product->update([
-                    'quantity' => $item->product->quantity + $item->quantity
-                ]);
+            $order_items = OrderItems::where('order_id', $order->id)->get();
+
+            $order_items->each(function ($item) {
+                $product = Products::find($item->product_id);
+                $qty = $item->product->quantity + $item->quantity;
+                $product->quantity = $qty;
+                $product->save();
             });
 
             $data = returnMessage(1, $order, 'Cancel success');
