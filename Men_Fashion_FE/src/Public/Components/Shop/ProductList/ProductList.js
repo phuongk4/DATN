@@ -140,7 +140,7 @@ function ProductList() {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12 mb-0"><a href="/">Trang chủ</a> <span
-                            className="mx-2 mb-0">/</span> <strong className="text-black">Shop</strong></div>
+                            className="mx-2 mb-0">/</span> <strong className="text-black">Cửa hàng</strong></div>
                     </div>
                 </div>
             </div>
@@ -153,13 +153,13 @@ function ProductList() {
 
                             <div className="row">
                                 <div className="col-md-12 mb-5">
-                                    <div className="float-md-left mb-4"><h2 className="text-black h5">Shop All</h2>
+                                    <div className="float-md-left mb-4"><h2 className="text-black h5">Toàn bộ sản phẩm </h2>
                                     </div>
                                     <div className="d-flex justify-content-end">
                                         <div className="btn-group">
                                             <select name="size" id="size" className="form-select"
                                                     onChange={sortProduct}>
-                                                <option selected={size_param === ''} value="">All</option>
+                                                <option selected={size_param === ''} value="">Tất cả</option>
                                                 <option selected={size_param === '3'} value="3">3</option>
                                                 <option selected={size_param === '6'} value="6">6</option>
                                                 <option selected={size_param === '9'} value="9">9</option>
@@ -169,9 +169,9 @@ function ProductList() {
                                         <div className="btn-group ms-3">
                                             <select name="sort" id="sort" className="form-select"
                                                     onChange={sortProduct}>
-                                                <option selected={sort_param === 'desc'} value="desc">From High to Low
+                                                <option selected={sort_param === 'desc'} value="desc">Từ cao đến thấp
                                                 </option>
-                                                <option selected={sort_param === 'asc'} value="asc">From Low to High
+                                                <option selected={sort_param === 'asc'} value="asc">Từ thấp đến cao
                                                 </option>
                                             </select>
                                         </div>
@@ -194,7 +194,13 @@ function ProductList() {
                                                        href={'/products/' + product.id}>{product.name}</a></h3>
                                                 <p className="mb-0 text_truncate_2_"
                                                    dangerouslySetInnerHTML={{__html: product.short_description}}></p>
-                                                <p className="text-primary font-weight-bold">{ConvertNumber(product.sale_price)}</p>
+
+                                                <p className="text-danger font-weight-bold">
+                                                    {ConvertNumber(product.sale_price || 50)}
+                                                    <strike className="ml-2 small text-black">
+                                                        {ConvertNumber(product.price || 50)}
+                                                    </strike>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -207,7 +213,7 @@ function ProductList() {
                                     <div className="site-block-27">
                                         <ul>
                                             <li>
-                                                <a href="#" onClick={() => handleClick(currentPage - 1)}>&lt;</a>
+                                            <a href="#" onClick={() => handleClick(currentPage - 1)}>&lt;</a>
                                             </li>
 
                                             {Array.from({length: totalPages}, (_, i) => (
@@ -227,7 +233,7 @@ function ProductList() {
 
                         <div className="col-md-3 order-1 mb-5 mb-md-0">
                             <div className="border p-4 rounded mb-4">
-                                <h3 className="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
+                                <h3 className="mb-3 h6 text-uppercase text-black d-block">Danh mục</h3>
                                 <ul className="list-unstyled mb-0">
                                     {
                                         categories.map((category) => (
@@ -246,7 +252,7 @@ function ProductList() {
 
                             <div className="border p-4 rounded mb-4">
                                 <div className="mb-4">
-                                    <h3 className="mb-3 h6 text-uppercase text-black d-block">Filter by Price</h3>
+                                    <h3 className="mb-3 h6 text-uppercase text-black d-block">Lọc theo giá</h3>
                                     <div className="form-group d-flex align-items-center justify-content-between gap-3">
                                         <input type="number" name="min-price" id="min-price" min="0"
                                                className="form-control border"/>
@@ -290,7 +296,7 @@ function ProductList() {
 
                                 <div className="mb-4">
                                     <button className="btn btn-primary w-100" type="button"
-                                            onClick={searchProduct}>Apply
+                                            onClick={searchProduct}>Áp dụng
                                     </button>
                                 </div>
                             </div>

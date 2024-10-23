@@ -13,6 +13,7 @@ import {Pagination} from 'swiper/modules';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
+import ConvertNumber from "../Shared/Utils/ConvertNumber";
 
 window.jQuery = $;
 window.$ = $;
@@ -276,15 +277,21 @@ function Home() {
                                                             src={product.thumbnail || "/assets/clients/images/cloth_1.jpg"}
                                                             alt={product.name || "Image placeholder"}
                                                             className="img-fluid"
+                                                            style={{width: '100%', height: '300px',}}
                                                         />
                                                     </figure>
-                                                    <div className="block-4-text p-4">
+                                                    <div className="block-4-text p-4" style={{height: '180px'}}>
                                                         <h3><a className="text_truncate_"
                                                                href={'/products/' + product.id}>{product.name || "Product Name"}</a>
                                                         </h3>
-                                                        <p className="mb-0 text_truncate_2_"
+                                                        <p className="mb-0 text_truncate_2_" style={{height: '55px'}}
                                                            dangerouslySetInnerHTML={{__html: product.short_description}}></p>
-                                                        <p className="text-primary font-weight-bold">${product.price || 50}</p>
+                                                        <p className="text-danger font-weight-bold">
+                                                            {ConvertNumber(product.sale_price || 50)}
+                                                            <strike className="ml-2 small text-black">
+                                                                {ConvertNumber(product.price || 50)}
+                                                            </strike>
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
