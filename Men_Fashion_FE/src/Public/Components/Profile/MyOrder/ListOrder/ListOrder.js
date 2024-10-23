@@ -7,13 +7,20 @@ import {Link} from 'react-router-dom';
 import $ from "jquery";
 
 function ListOrder() {
-    let userId = sessionStorage.getItem('id');
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [tableParams, setTableParams] = useState({
+        pagination: {
+            current: 1,
+            pageSize: 10,
+        },
+    });
 
     const handleCancel = async (id) => {
         if (window.confirm('Bạn có chắc chắn muốn hủy đơn hàng?')) {
             await orderService.cancelOrder(id)
                 .then((res) => {
-                    console.log("cancel", res.data)
+                    console.log("cancel", res.data.data)
                     alert(`Hủy đơn hàng thành công!`)
                     getListOrder();
                 })
@@ -39,24 +46,25 @@ function ListOrder() {
 
     const columns = [
         {
-            title: 'ID',
-            dataIndex: 'id',
-            width: '5%',
+            title: 'STT',
+            dataIndex: 'key',
+            width: '10%',
+            render: (text, record, index) => index + 1,
         },
         {
             title: 'Tên đầy đủ',
-            dataIndex: 'fullName',
+            dataIndex: 'full_name',
             width: '15%',
         },
         {
             title: 'Số điện thoại',
             dataIndex: 'phone',
-            width: '15%',
+            width: '12%',
         },
         {
             title: 'Email',
             dataIndex: 'email',
-            width: '15%',
+            width: '12%',
         },
         {
             title: 'Địa chỉ',
@@ -65,7 +73,7 @@ function ListOrder() {
         },
         {
             title: 'Tổng tiền ',
-            dataIndex: 'totalPrice',
+            dataIndex: 'total_price',
             width: '5%',
         },
         {
@@ -77,34 +85,80 @@ function ListOrder() {
             title: 'Hành động',
             dataIndex: 'id',
             key: 'x',
-            render: (id) =>
-                <>
-                    <Link to={`/my-order/${id}`} className="btn btn-primary">
-                        Xem chi tiết
-                    </Link>
-
-                    <button type="button" id={`btnDelete_${id}`} className="btn btn-danger"
-                            onClick={() => handleCancel(id)}>Hủy đơn hàng
-                    </button>
-                </>
+            render: (text, record, index) => {
+                const {status} = data[index];
+                const {id} = data[index];
+                return (
+                    <>
+                        <Link to={`/my-order/${id}`} className="btn btn-primary">
+                            Xem chi tiết
+                        </Link>
+                        {status === 'ĐANG XỬ LÝ' && (
+                            <button
+                                type="button"
+                                id={`btnCancel_${id}`}
+                                className="btn btn-danger"
+                                onClick={() => handleCancel(id)}
+                            >
+                                Hủy đơn hàng
+                            </button>
+                        )}
+                    </>
+                );
+            },
         },
     ];
 
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [tableParams, setTableParams] = useState({
-        pagination: {
-            current: 1,
-            pageSize: 10,
-        },
-    });
-
     const getListOrder = async () => {
-        await orderService.listOrder(userId)
+        await orderService.listOrder('')
             .then((res) => {
                 if (res.status === 200) {
                     console.log("data", res.data)
-                    setData(res.data)
+                    setData(res.data.data)
+                    setLoading(false)
+                } else {
+                    setLoading(false)
+                }
+            })
+            .catch((err) => {
+                setLoading(false)
+                console.log(err)
+            })
+    }
+
+    const selectStatus = async () => {
+        let status = $('#inputState').val();
+        status = parseInt(status.trim());
+        let statusName;
+        switch (status) {
+            case 1:
+                statusName = 'ĐANG XỬ LÝ';
+                break;
+            case 2:
+                statusName = 'ĐANG CHỜ THANH TOÁN';
+                break;
+            case 3:
+                statusName = 'ĐANG VẬN CHUYỂN';
+                break;
+            case 4:
+                statusName = 'ĐÃ GIAO HÀNG';
+                break;
+            case 5:
+                statusName = 'ĐÃ HOÀN THÀNH';
+                break;
+            case 6:
+                statusName = 'ĐÃ HỦY';
+                break;
+            default:
+                statusName = '';
+                break;
+        }
+
+        await orderService.listOrder(statusName)
+            .then((res) => {
+                if (res.status === 200) {
+                    console.log("data", res.data)
+                    setData(res.data.data)
                     setLoading(false)
                 } else {
                     alert('Error')
@@ -148,10 +202,26 @@ function ListOrder() {
                 </div>
 
                 <div className="row">
-                    <div className="mb-3 col-md-3">
-                        <h5>Tìm kiếm đơn hàng</h5>
-                        <input className="form-control" id="inputSearchOrder" type="text" placeholder="Nhập thông tin.."/>
-                        <br/>
+                    <div className="d-flex align-items-center justify-content-between row col-md-12">
+                        <div className="mb-3 col-md-3">
+                            <h5>Tìm kiếm đơn hàng</h5>
+                            <input className="form-control" id="inputSearchOrder" type="text"
+                                   placeholder="Nhập thông tin.."/>
+                            <br/>
+                        </div>
+
+                        <div className="mb-3 col-md-3">
+                            <label htmlFor="inputState">Trạng thái</label>
+                            <select id="inputState" name="inputState" className="form-control" onChange={selectStatus}>
+                                <option value="0">Tất cả</option>
+                                <option value="1">ĐANG XỬ LÝ</option>
+                                <option value="2">ĐANG CHỜ THANH TOÁN</option>
+                                <option value="3">ĐANG VẬN CHUYỂN</option>
+                                <option value="4">ĐÃ GIAO HÀNG</option>
+                                <option value="5">ĐÃ HOÀN THÀNH</option>
+                                <option value="6">ĐÃ HỦY</option>
+                            </select>
+                        </div>
                     </div>
                     <Table
                         style={{margin: "auto"}}

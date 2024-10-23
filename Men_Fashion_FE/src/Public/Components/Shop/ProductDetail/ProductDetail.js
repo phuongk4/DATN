@@ -31,6 +31,7 @@ function ProductDetail() {
                     setProduct(res.data.data.product)
                     setProductOthers(res.data.data.other_products)
                     setOptionsProduct(res.data.data.product.options)
+                    renderImage(res.data.data.product.gallery, res.data.data.product.name)
                     setLoading(false)
                 }
             })
@@ -40,11 +41,25 @@ function ProductDetail() {
             })
     }
 
-    const selectOption = async () => {
+    const selectOption = async (el) => {
         LoadingPage();
+
+        console.log($(el).val())
+
+        let input_option_ = $('.input_option_');
+
+        let parent = $(el).closest('.option_item');
+        let list_ = parent.find('.input_option_');
+
+        list_.each(function () {
+            if (this === el && this.checked) {
+                list_.not(this).prop('checked', false);
+            }
+        });
+
         let list_option;
         let arr_option = [];
-        $('.input_option_').each(function () {
+        input_option_.each(function () {
             if ($(this).is(':checked')) {
                 arr_option.push($(this).val());
             }
@@ -72,7 +87,7 @@ function ProductDetail() {
             })
             .catch((err) => {
                 console.log(err)
-                alert('Không tìm thấy thuộc tính hợp lệ!')
+                // alert('Không tìm thấy thuộc tính hợp lệ!')
             })
     }
 
@@ -102,7 +117,7 @@ function ProductDetail() {
             .catch((err) => {
                 LoadingPage();
                 let message = err.response.data.message;
-                if (!message){
+                if (!message) {
                     message = err.response.data.status;
                     alert(message);
                     window.location.href = '/login';
@@ -152,6 +167,22 @@ function ProductDetail() {
         }
     }
 
+    function renderImage(images, alt) {
+        let arr = images.split(',');
+        let html = '';
+        for (let i = 0; i < arr.length; i++) {
+            html += `<div class="item">
+          <img style="cursor: pointer" width="100px" onclick="changeSrcImage('${arr[i]}')" src="${arr[i]}" alt="${alt}">
+        </div>`;
+        }
+
+        $('#list_images').empty().append(html);
+    }
+
+    window.changeSrcImage = (src) => {
+        $('#productImage').attr('src', src);
+    }
+
     useEffect(() => {
         getProduct();
     }, [loading]);
@@ -174,7 +205,13 @@ function ProductDetail() {
                     <Form className="row" id="formCreate" onFinish={addToCart}>
                         <input type="text" className="d-none" id="product_option"/>
                         <div className="col-md-6">
-                            <img src={product.thumbnail} alt="Image" className="img-fluid" style={{ width: '100%', height: 'auto',}}/>
+                            <img src={product.thumbnail} alt="Image" className="img-fluid" id="productImage"
+                                 style={{width: '100%', height: '500px',}}/>
+
+                            <div id="list_images"
+                                 className="d-flex align-items-center justify-content-start flex-wrap gap-2 mt-3">
+
+                            </div>
                         </div>
                         <div className="col-md-6">
                             <h2 className="text-black">{product.name}</h2>
@@ -196,7 +233,8 @@ function ProductDetail() {
                                                                key={propertyIndex}>
                                                                     <span className="d-inline-block mr-2"
                                                                           style={{top: '0px', position: 'relative'}}>
-                                                                        <input type="radio" onChange={selectOption}
+                                                                        <input type="checkbox"
+                                                                               onChange={(e) => selectOption(e.target)}
                                                                                className="input_option_"
                                                                                data-value={option.attribute.id + '-' + property.id}
                                                                                value={property.id} id={inputId}
@@ -418,7 +456,13 @@ function ProductDetail() {
                                                         </h3>
                                                         <p className="mb-0 text_truncate_2_"
                                                            dangerouslySetInnerHTML={{__html: product.short_description}}></p>
-                                                        <p className="text-primary font-weight-bold">{ConvertNumber(product.sale_price)}</p>
+
+                                                        <p className="text-danger font-weight-bold">
+                                                            {ConvertNumber(product.sale_price || 50)}
+                                                            <strike className="ml-2 small text-black">
+                                                                {ConvertNumber(product.price || 50)}
+                                                            </strike>
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>

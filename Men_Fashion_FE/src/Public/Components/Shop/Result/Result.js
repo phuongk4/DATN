@@ -123,13 +123,13 @@ function Result() {
 
                             <div className="row">
                                 <div className="col-md-12 mb-5">
-                                    <div className="float-md-left mb-4"><h2 className="text-black h5">Shop All</h2>
+                                    <div className="float-md-left mb-4"><h2 className="text-black h5">Toàn bộ sản phẩm</h2>
                                     </div>
                                     <div className="d-flex justify-content-end">
                                         <div className="btn-group">
                                             <select name="size" id="size" className="form-select"
                                                     onChange={filterProduct}>
-                                                <option selected={size_param === ''} value="">All</option>
+                                                <option selected={size_param === ''} value="">Tất cả</option>
                                                 <option selected={size_param === '3'} value="3">3</option>
                                                 <option selected={size_param === '6'} value="6">6</option>
                                                 <option selected={size_param === '9'} value="9">9</option>
@@ -165,7 +165,13 @@ function Result() {
                                                            href={`/products/${product.id}`}>{product.name}</a></h3>
                                                     <p className="mb-0 text_truncate_2_"
                                                        dangerouslySetInnerHTML={{__html: product.short_description}}></p>
-                                                    <p className="text-primary font-weight-bold">{ConvertNumber(product.sale_price)}</p>
+
+                                                    <p className="text-danger font-weight-bold">
+                                                        {ConvertNumber(product.sale_price || 50)}
+                                                        <strike className="ml-2 small text-black">
+                                                            {ConvertNumber(product.price || 50)}
+                                                        </strike>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -176,7 +182,7 @@ function Result() {
 
                         <div className="col-md-3 order-1 mb-5 mb-md-0">
                             <div className="border p-4 rounded mb-4">
-                                <h3 className="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
+                                <h3 className="mb-3 h6 text-uppercase text-black d-block">Danh mục </h3>
                                 <ul className="list-unstyled mb-0 product_category">
                                     {
                                         categories.map((category) => (
@@ -195,7 +201,7 @@ function Result() {
 
                             <div className="border p-4 rounded mb-4">
                                 <div className="mb-4">
-                                    <h3 className="mb-3 h6 text-uppercase text-black d-block">Filter by Price</h3>
+                                    <h3 className="mb-3 h6 text-uppercase text-black d-block">Lọc theo giá</h3>
                                     <div className="form-group d-flex align-items-center justify-content-between gap-3">
                                         <input type="number" name="min-price" id="min-price" min="1"
                                                className="form-control border"/>
@@ -239,7 +245,7 @@ function Result() {
 
                                 <div className="mb-4">
                                     <button className="btn btn-primary w-100" type="button"
-                                            onClick={searchProduct}>Apply
+                                            onClick={searchProduct}>Áp dụng
                                     </button>
                                 </div>
                             </div>

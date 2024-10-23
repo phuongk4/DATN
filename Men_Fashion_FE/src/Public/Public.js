@@ -33,6 +33,7 @@ import Dashboard from './Components/AdminApp/Dashboard/Dashboard';
 import ListCategory from './Components/AdminApp/Category/ListCategory/ListCategory';
 import CreateCategory from './Components/AdminApp/Category/CreateCategory/CreateCategory';
 import DetailCategory from './Components/AdminApp/Category/DetailCategory/DetailCategory';
+import UpdateCategory from './Components/AdminApp/Category/UpdateCategory/UpdateCategory';
 /* Admin Attribute */
 import ListAttribute from './Components/AdminApp/Attribute/ListAttribute/ListAttribute';
 import CreateAttribute from './Components/AdminApp/Attribute/CreateAttribute/CreateAttribute';
@@ -45,6 +46,7 @@ import DetailProperty from './Components/AdminApp/Property/DetailProperty/Detail
 import ListProduct from './Components/AdminApp/Product/ListProduct/ListProduct';
 import CreateProduct from './Components/AdminApp/Product/CreateProduct/CreateProduct';
 import DetailProduct from './Components/AdminApp/Product/DetailProduct/DetailProduct';
+import UpdateProduct from "./Components/AdminApp/Product/UpdateProduct/UpdateProduct";
 
 /**
  * This component renders the routes for the public part of the application.
@@ -73,7 +75,7 @@ function Public() {
                 <Route path='/products/search' element={<Result/>}/>
                 <Route path='/cart' element={<Cart/>}/>
                 <Route path='/checkout' element={<Checkout/>}/>
-                <Route path='/payment-confirm' element={<ConfirmCheckout/>}/>
+                <Route path='/checkout_success' element={<ConfirmCheckout/>}/>
                 <Route path='/thanks-you' element={<ThanksYou/>}/>
                 {/* Client Auth Page */}
                 <Route path='/profile' element={<Profile/>}/>
@@ -85,6 +87,7 @@ function Public() {
                 <Route path='/admin/categories/list' element={<ListCategory/>}/>
                 <Route path='/admin/categories/create' element={<CreateCategory/>}/>
                 <Route path='/admin/categories/detail/:id' element={<DetailCategory/>}/>
+                <Route path='/admin/categories/update/:id' element={<UpdateCategory/>}/>
                 {/* Admin Aroperties */}
                 <Route path='/admin/attributes/list' element={<ListAttribute/>}/>
                 <Route path='/admin/attributes/create' element={<CreateAttribute/>}/>
@@ -97,6 +100,7 @@ function Public() {
                 <Route path='/admin/products/list' element={<ListProduct/>}/>
                 <Route path='/admin/products/create' element={<CreateProduct/>}/>
                 <Route path='/admin/products/detail/:id' element={<DetailProduct/>}/>
+                <Route path='/admin/products/update/:id' element={<UpdateProduct/>}/>
             </Routes>
         </div>
     )
