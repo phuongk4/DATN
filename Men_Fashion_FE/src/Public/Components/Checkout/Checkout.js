@@ -7,10 +7,32 @@ import Footer from "../Shared/Client/Footer/Footer";
 import cartService from "../Service/CartService";
 import $ from "jquery";
 import ConvertNumber from "../Shared/Utils/ConvertNumber";
+import accountService from "../Service/AccountService";
 
 function Checkout() {
     const [loading, setLoading] = useState(true);
     const [carts, setCarts] = useState([]);
+    const [users, setUsers] = useState([]);
+    const navigate = useNavigate();
+
+    const getUser = async () => {
+        await accountService.getInfo()
+            .then((res) => {
+                let user = JSON.parse(JSON.stringify(res.data.data));
+                setUsers(user);
+            })
+            .catch((err) => {
+                console.log(err)
+                let stt = err.response.status;
+                if (stt === 444) {
+                    alert('Phiên đăng nhập đã hết hạn, đăng nhập lại...');
+                    sessionStorage.clear();
+                    navigate('/login');
+                } else {
+                    navigate('/login');
+                }
+            });
+    };
 
     const getListProductCart = async () => {
         await cartService.listCart()
@@ -108,6 +130,7 @@ function Checkout() {
     useEffect(() => {
         getListProductCart();
         calcTotal();
+        getUser();
     }, [loading]);
 
     return (
@@ -141,7 +164,7 @@ function Checkout() {
                                             <label htmlFor="full_name" className="text-black">Tên của bạn<span
                                                 className="text-danger">*</span></label>
                                             <input type="text" required className="form-control" id="full_name"
-                                                   name="full_name"/>
+                                                   name="full_name" defaultValue={users.full_name}/>
                                         </div>
                                     </div>
 
@@ -150,7 +173,7 @@ function Checkout() {
                                             <label htmlFor="c_address" className="text-black">Địa chỉ <span
                                                 className="text-danger">*</span></label>
                                             <input type="text" required className="form-control" id="c_address"
-                                                   name="c_address"
+                                                   name="c_address" defaultValue={users.address}
                                                    placeholder="Địa chỉ đường phố"/>
                                         </div>
                                     </div>
@@ -165,13 +188,13 @@ function Checkout() {
                                             <label htmlFor="c_email_address" className="text-black">Email <span
                                                 className="text-danger">*</span></label>
                                             <input type="text" required className="form-control" id="c_email_address"
-                                                   name="c_email_address"/>
+                                                   name="c_email_address" defaultValue={users.email}/>
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="c_phone" className="text-black">Số điện thoại <span
                                                 className="text-danger">*</span></label>
                                             <input type="text" required className="form-control" id="c_phone" name="c_phone"
-                                                   placeholder="Số điện thoại"/>
+                                                   placeholder="Số điện thoại" defaultValue={users.phone}/>
                                         </div>
                                     </div>
 

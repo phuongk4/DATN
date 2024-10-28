@@ -13,7 +13,7 @@ function Footer() {
                             </div>
                             <div className="col-md-6 col-lg-4">
                                 <ul className="list-unstyled">
-                                    <li><Link to="/products">Sell online</Link></li>
+                                    <li><Link to="/products">Cửa hàng</Link></li>
                                     <li><Link to="/about-us">Về chúng tôi</Link></li>
                                     <li><Link to="/contacts">Liên hệ chúng tôi</Link></li>
                                     <li><Link to="/news-event">Tin tức & Sự kiện</Link></li>
@@ -22,8 +22,8 @@ function Footer() {
                             <div className="col-md-6 col-lg-4">
                                 <ul className="list-unstyled">
                                     <li><Link to="#">Trang web thương mại điện tử</Link></li>
-                                    <li><Link to="#">Túi xách trang web</Link></li>
-                                    <li><Link to="#">Phát triển trang web</Link></li>
+                                    <li><Link to="#">Thời trang nam</Link></li>
+                                    <li><Link to="#">Xu hướng thời trang nam</Link></li>
                                 </ul>
                             </div>
                             <div className="col-md-6 col-lg-4">
@@ -40,7 +40,7 @@ function Footer() {
                         <Link to="#" className="block-6">
                             <img src="/assets/clients/images/hero_1.jpg" alt="Image placeholder"
                                  className="img-fluid rounded mb-4"></img>
-                            <h3 className="font-weight-light  mb-0">Tìm chiếc túi yêu thích của bạn</h3>
+                            <h3 className="font-weight-light  mb-0">Khám phá thời trang nam đẳng cấp, phong cách và hiện đại.</h3>
                             <p>Khuyến mãi từ ngày 15 tháng 9 năm 2024</p>
                         </Link>
                     </div>

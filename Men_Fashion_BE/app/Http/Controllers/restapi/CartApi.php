@@ -135,18 +135,29 @@ class CartApi extends Api
                 ->where('values', $values)
                 ->first();
 
+            $option = ProductOptions::find($values);
+
             if ($cart) {
                 $quantity = $cart->quantity + $quantity;
 
-                if ($product->quantity < $quantity) {
-                    $data = returnMessage(-1, '', 'Quantity not enough!');
-                    return response($data, 400);
+                if ($option) {
+                    if ($quantity > $option->quantity) {
+                        $data = returnMessage(-1, '', 'Quantity not enough!');
+                        return response($data, 400);
+                    }
                 }
 
                 $cart->quantity = $quantity;
                 $cart->save();
             } else {
                 $cart = new Carts();
+
+                if ($option) {
+                    if ($quantity > $option->quantity) {
+                        $data = returnMessage(-1, '', 'Quantity not enough!');
+                        return response($data, 400);
+                    }
+                }
 
                 $cart->product_id = $product_id;
                 $cart->user_id = $user_id;

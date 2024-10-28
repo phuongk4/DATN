@@ -5,6 +5,21 @@
         "version": "3.0"
     },
     "paths": {
+        "/api/attributes/list": {
+            "get": {
+                "tags": [
+                    "Attribute"
+                ],
+                "summary": "Get list of attributes",
+                "description": "Get list of attributes",
+                "operationId": "0ae49d46f00c541457cfd0c91745af01",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "tags": [
@@ -907,27 +922,6 @@
                 }
             }
         },
-        "/api/products/get-info": {
-            "get": {
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Get info of a product",
-                "description": "Get info of a product",
-                "operationId": "addbf076eeb234804b9ce83ee990a2dc",
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    },
-                    "401": {
-                        "description": "Unauthorized user"
-                    },
-                    "404": {
-                        "description": "Product not found"
-                    }
-                }
-            }
-        },
         "/api/products/search": {
             "get": {
                 "tags": [
@@ -968,6 +962,15 @@
                         "name": "keyword",
                         "in": "query",
                         "description": "Keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "option",
+                        "in": "query",
+                        "description": "Option",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -2457,6 +2460,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Attribute",
+            "description": "Attribute"
+        },
         {
             "name": "Auth",
             "description": "Auth"

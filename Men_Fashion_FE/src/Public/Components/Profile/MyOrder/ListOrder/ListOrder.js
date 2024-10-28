@@ -74,12 +74,12 @@ function ListOrder() {
         {
             title: 'Tổng tiền ',
             dataIndex: 'total_price',
-            width: '5%',
+            width: '10%',
         },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
-            width: '5%',
+            width: '10%',
         },
         {
             title: 'Hành động',
@@ -93,16 +93,6 @@ function ListOrder() {
                         <Link to={`/my-order/${id}`} className="btn btn-primary">
                             Xem chi tiết
                         </Link>
-                        {status === 'ĐANG XỬ LÝ' && (
-                            <button
-                                type="button"
-                                id={`btnCancel_${id}`}
-                                className="btn btn-danger"
-                                onClick={() => handleCancel(id)}
-                            >
-                                Hủy đơn hàng
-                            </button>
-                        )}
                     </>
                 );
             },

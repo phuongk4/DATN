@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Carts;
 use App\Models\OrderItems;
 use App\Models\Orders;
+use App\Models\ProductOptions;
 use App\Models\Products;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -415,18 +416,26 @@ class CheckoutApi extends Api
 
             $order_item->product_id = $cart->product_id;
             $order_item->quantity = $cart->quantity;
-            $order_item->price = $cart->product->price;
+
             $order_item->order_id = $order->id;
             $order_item->value = $cart->values;
+
+            $option = ProductOptions::find($cart->values);
+
+            $order_item->price = $option->sale_price ?? $cart->product->sale_price;
 
             $order_item->save();
 
             /**
              * Xử lí khi mua đơn hàng sẽ trừ đi số sản phẩm đã mua
              * */
-            $product = Products::find($cart->product_id);
-            $product->quantity -= $cart->quantity;
-            $product->save();
+//            $product = Products::find($cart->product_id);
+//            $product->quantity -= $cart->quantity;
+//            $product->save();
+
+            $option->quantity -= $cart->quantity;
+            $option->save();
+
         }
 
         return $order_created;

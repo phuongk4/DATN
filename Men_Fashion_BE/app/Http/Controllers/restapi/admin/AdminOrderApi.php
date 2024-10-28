@@ -5,7 +5,10 @@ namespace App\Http\Controllers\restapi\admin;
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
+use App\Models\OrderItems;
 use App\Models\Orders;
+use App\Models\ProductOptions;
+use App\Models\Products;
 use App\Models\Revenues;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
@@ -65,10 +68,12 @@ class AdminOrderApi extends Api
             $orders = $orders->where('user_id', $user_id);
         }
 
-        $orders = $orders->cursor()
+        $orders = $orders->orderBy('id', 'desc')
+            ->cursor()
             ->map(function ($item) {
                 $order = $item->toArray();
-                $order['order_items'] = $item->order_items;
+                $order_items = OrderItems::where('order_id', $item->id)->get();
+                $order['order_items'] = $order_items->toArray();
                 return $order;
             });
 
@@ -109,12 +114,24 @@ class AdminOrderApi extends Api
     public function detail($id)
     {
         $order = Orders::find($id);
+
         if (!$order || $order->status == OrderStatus::DELETED) {
             $data = returnMessage(0, null, 'Order not found');
             return response($data, 404);
         }
         $order_convert = $order->toArray();
-        $order_convert['order_items'] = $order->order_items;
+
+        $order_items = OrderItems::where('order_id', $id)
+            ->cursor()
+            ->map(function ($item) {
+                $order = $item->toArray();
+                $product = Products::find($item->product_id);
+                $order['product'] = $product->toArray();
+                return $order;
+            });
+
+        $order_convert['order_items'] = $order_items->toArray();
+
         $data = returnMessage(1, $order_convert, 'Success');
         return response($data, 200);
     }
@@ -175,7 +192,7 @@ class AdminOrderApi extends Api
                 return response($data, 400);
             }
 
-            if ($status == OrderStatus::COMPLETED) {
+            if ($order->status == OrderStatus::COMPLETED) {
                 $data = returnMessage(0, null, 'Order already completed');
                 return response($data, 400);
             }
@@ -184,9 +201,12 @@ class AdminOrderApi extends Api
             $order->save();
             if ($status == OrderStatus::CANCELED) {
                 $order->order_items->each(function ($item) {
-                    $item->product->update([
-                        'quantity' => $item->product->quantity + $item->quantity
-                    ]);
+//                    $item->product->update([
+//                        'quantity' => $item->product->quantity + $item->quantity
+//                    ]);
+                    $option = ProductOptions::find($item->value);
+                    $option->quantity = $option->quantity + $item->quantity;
+                    $option->save();
                 });
             }
 
