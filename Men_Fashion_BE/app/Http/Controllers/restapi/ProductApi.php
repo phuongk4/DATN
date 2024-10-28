@@ -31,38 +31,36 @@ class ProductApi extends Api
      */
     public function list(Request $request)
     {
-        $category_id = $request->input('category_id');
+
+        $category_id = $request->input('category');
         $size = $request->input('size');
-        $sort = $request->input('sort');
+        $sort = $request->input('sort') ?? 'desc';
+        $order_by = $request->input('order') ?? 'id';
+        $min_price = $request->input('minPrice');
+        $max_price = $request->input('maxPrice');
         $keyword = $request->input('keyword');
-        $order_by = $request->input('order');
 
-        $products = Products::where('status', ProductStatus::ACTIVE);
-
-        if ($category_id) {
-            $products->where('category_id', $category_id);
-        }
+        $products = Products::where('products.status', ProductStatus::ACTIVE)
+            ->join('product_options', 'product_options.product_id', '=', 'products.id')
+            ->when($category_id, function ($query) use ($category_id) {
+                $query->where('products.category_id', $category_id);
+            })
+            ->when($min_price, function ($query) use ($min_price) {
+                $query->where('products.sale_price', '>=', $min_price);
+            })
+            ->when($max_price, function ($query) use ($max_price) {
+                $query->where('products.sale_price', '<=', $max_price);
+            })
+            ->when($keyword, function ($query) use ($keyword) {
+                $query->where('products.name', 'like', '%' . $keyword . '%');
+            })
+            ->orderBy('products.' . $order_by, $sort);
 
         if ($size) {
-            $size = (int)$size;
-            $products->limit($size);
+            $products->limit((int)$size);
         }
 
-        if ($keyword) {
-            $products->where('name', 'like', '%' . $keyword . '%');
-        }
-
-        if (isset($sort) && isset($order_by) && $sort === 'asc') {
-            $products = $products->orderBy($order_by, $sort);
-        } elseif (isset($sort) && !isset($order_by) && $sort === 'asc') {
-            $products = $products->orderBy('id', $sort);
-        } elseif (isset($order_by)) {
-            $products = $products->orderBy($order_by, 'desc');
-        } else {
-            $products = $products->orderBy('id', 'desc');
-        }
-
-        $products = $products->get();
+        $products = $products->select('products.*')->distinct()->get();
         $data = returnMessage(1, $products, 'Success!');
         return response()->json($data, 200);
     }
@@ -300,6 +298,15 @@ class ProductApi extends Api
      *         )
      *     ),
      *     @OA\Parameter(
+     *          description="Option",
+     *          in="query",
+     *          name="option",
+     *          required=false,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     @OA\Parameter(
      *         description="Size",
      *         in="query",
      *         name="size",
@@ -340,52 +347,44 @@ class ProductApi extends Api
     {
         $category_id = $request->input('category');
         $size = $request->input('size');
-        $sort = $request->input('sort');
-        $order_by = $request->input('order');
+        $sort = $request->input('sort') ?? 'desc';
+        $order_by = $request->input('order') ?? 'id';
         $min_price = $request->input('minPrice');
         $max_price = $request->input('maxPrice');
         $keyword = $request->input('keyword');
+        $option = $request->input('option');
 
-        $products = Products::where('status', ProductStatus::ACTIVE)
+        $products = Products::where('products.status', ProductStatus::ACTIVE)
+            ->join('product_options', 'product_options.product_id', '=', 'products.id')
             ->when($category_id, function ($query) use ($category_id) {
-                if (!empty($category_id)) {
-                    $query->where('category_id', $category_id);
-                }
+                $query->where('products.category_id', $category_id);
             })
             ->when($min_price, function ($query) use ($min_price) {
-                if (!empty($min_price)) {
-                    $query->where('sale_price', '>=', $min_price);
-                }
+                $query->where('products.sale_price', '>=', $min_price);
             })
             ->when($max_price, function ($query) use ($max_price) {
-                if (!empty($max_price)) {
-                    $query->where('sale_price', '<=', $max_price);
-                }
+                $query->where('products.sale_price', '<=', $max_price);
             })
             ->when($keyword, function ($query) use ($keyword) {
-                if (!empty($keyword)) {
-                    $query->where('name', 'like', '%' . $keyword . '%');
-                }
-            });
+                $query->where('products.name', 'like', '%' . $keyword . '%');
+            })
+            ->when($option, function ($query) use ($option) {
+                $arr_option = explode(',', $option);
 
-        if (isset($sort) && isset($order_by) && $sort === 'asc') {
-            $products = $products->orderBy($order_by, $sort);
-        } elseif (isset($sort) && !isset($order_by) && $sort === 'asc') {
-            $products = $products->orderBy('id', $sort);
-        } elseif (isset($order_by)) {
-            $products = $products->orderBy($order_by, 'desc');
-        } else {
-            $products = $products->orderBy('id', 'desc');
-        }
+                $query->where(function ($query) use ($arr_option) {
+                    foreach ($arr_option as $op) {
+                        $query->orWhereJsonContains('product_options.value', ['property_item' => $op]);
+                    }
+                });
+            })
+            ->orderBy('products.' . $order_by, $sort);
 
         if ($size) {
-            $size = (int)$size;
-            $products->limit($size);
+            $products->limit((int)$size);
         }
 
-        $products = $products->get();
+        $products = $products->select('products.*')->distinct()->get();
 
-        $data = returnMessage(1, $products, 'Success!');
-        return response()->json($data, 200);
+        return response()->json(returnMessage(1, $products, 'Success!'), 200);
     }
 }

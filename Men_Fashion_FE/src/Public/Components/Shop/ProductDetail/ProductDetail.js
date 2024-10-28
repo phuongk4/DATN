@@ -270,7 +270,7 @@ function ProductDetail() {
 
                             </div>
                             <p>
-                                <button type="submit" className="buy-now btn btn-sm btn-primary">Add To Cart</button>
+                                <button type="submit" className="buy-now btn btn-sm btn-primary">Thêm vào giỏ hàng</button>
                             </p>
 
                         </div>
