@@ -18,6 +18,7 @@ use App\Http\Controllers\restapi\admin\AdminProductApi;
 use App\Http\Controllers\restapi\admin\AdminPropertyApi;
 use App\Http\Controllers\restapi\admin\AdminRevenueApi;
 use App\Http\Controllers\restapi\admin\AdminReviewProductApi;
+use App\Http\Controllers\restapi\admin\AdminUserApi;
 
 Route::group(['prefix' => 'categories'], function () {
     Route::get('list', [AdminCategoryApi::class, 'list'])->name('api.admin.categories.list');
@@ -54,7 +55,7 @@ Route::group(['prefix' => 'products'], function () {
 Route::group(['prefix' => 'orders'], function () {
     Route::get('list', [AdminOrderApi::class, 'list'])->name('api.admin.orders.list');
     Route::get('detail/{id}', [AdminOrderApi::class, 'detail'])->name('api.admin.orders.detail');
-    Route::put('update/{id}', [AdminOrderApi::class, 'update'])->name('api.admin.orders.update');
+    Route::post('update/{id}', [AdminOrderApi::class, 'update'])->name('api.admin.orders.update');
 });
 
 Route::group(['prefix' => 'reviews'], function () {
@@ -66,4 +67,12 @@ Route::group(['prefix' => 'reviews'], function () {
 
 Route::group(['prefix' => 'revenues'], function () {
     Route::get('list', [AdminRevenueApi::class, 'list'])->name('api.admin.revenues.list');
+});
+
+Route::group(['prefix' => 'users'], function () {
+    Route::get('list', [AdminUserApi::class, 'list'])->name('api.admin.users.list');
+    Route::get('detail/{id}', [AdminUserApi::class, 'detail'])->name('api.admin.users.detail');
+    Route::post('create', [AdminUserApi::class, 'create'])->name('api.admin.users.create');
+    Route::post('update/{id}', [AdminUserApi::class, 'update'])->name('api.admin.users.update');
+    Route::delete('delete/{id}', [AdminUserApi::class, 'delete'])->name('api.admin.users.delete');
 });

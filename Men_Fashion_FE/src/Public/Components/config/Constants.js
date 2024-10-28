@@ -1,2 +1,2 @@
-export const API_KEY_TINYMCE = 'feg6zj76q1f1iy1xqerx6fds9xgb1hb3ublgvwuqa52ovbbc';
+export const API_KEY_TINYMCE = 'f3ypbnh5ya1g7vpe0vhvpwgdmako1tmfm71ug4veeu6c5d3k';
 export const TEST_ = "";

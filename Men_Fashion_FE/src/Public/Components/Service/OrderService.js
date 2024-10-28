@@ -10,10 +10,9 @@ const API_ENDPOINT = {
     CREATE_ORDER_VNPAY_RETURN: "/api/orders/vnpay-return",
     CANCEL_ORDER: "/api/orders/cancel/",
     // ADMIN
-    ADMIN_LIST_ORDER: "/admin/api/orders/list",
-    ADMIN_DETAIL_ORDER: "/admin/api/orders/detail/",
-    ADMIN_UPDATE_ORDER: "/admin/api/orders/",
-    ADMIN_DELETE_ORDER: "/admin/api/orders/",
+    ADMIN_LIST_ORDER: "/api/admin/orders/list",
+    ADMIN_DETAIL_ORDER: "/api/admin/orders/detail/",
+    ADMIN_UPDATE_ORDER: "/api/admin/orders/update/",
 }
 
 class OrderService {
@@ -76,26 +75,26 @@ class OrderService {
         return axios.post(BASE_URL_SERVER + API_ENDPOINT.CREATE_ORDER_VNPAY_RETURN, data, config);
     }
 
-    cancelOrder = (id) => {
+    cancelOrder = (id, data) => {
         const config = {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             }
         };
-        return axios.post(BASE_URL_SERVER + API_ENDPOINT.CANCEL_ORDER + id, '', config);
+        return axios.post(BASE_URL_SERVER + API_ENDPOINT.CANCEL_ORDER + id, data, config);
     }
 
 
     // ADMIN
-    adminListOrder = () => {
+    adminListOrder = (status) => {
         const config = {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             }
         };
-        return axios.get(BASE_URL_SERVER + API_ENDPOINT.ADMIN_LIST_ORDER, config);
+        return axios.get(BASE_URL_SERVER + API_ENDPOINT.ADMIN_LIST_ORDER + '?status=' + status, config);
     }
 
     adminDetailOrder = (id) => {
@@ -115,17 +114,7 @@ class OrderService {
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             }
         };
-        return axios.put(BASE_URL_SERVER + API_ENDPOINT.ADMIN_UPDATE_ORDER + id + '?status=' + data, "", config)
-    }
-
-    adminDeleteOrder = (id) => {
-        const config = {
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
-            }
-        };
-        return axios.delete(BASE_URL_SERVER + API_ENDPOINT.ADMIN_DELETE_ORDER + id, config);
+        return axios.post(BASE_URL_SERVER + API_ENDPOINT.ADMIN_UPDATE_ORDER + id, data, config)
     }
 }
 

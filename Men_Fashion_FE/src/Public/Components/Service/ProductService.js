@@ -25,8 +25,8 @@ class ProductService {
         return axios.get(BASE_URL_SERVER + API_ENDPOINT.DETAIL_PRODUCT + id);
     }
 
-    searchProduct = (category, keyword, size, sort, minPrice, maxPrice) => {
-        let url = API_ENDPOINT.SEARCH_PRODUCT + `?category=${category}&keyword=${keyword}&size=${size}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+    searchProduct = (category, keyword, size, sort, minPrice, maxPrice, option) => {
+        let url = API_ENDPOINT.SEARCH_PRODUCT + `?category=${category}&keyword=${keyword}&size=${size}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}&option=${option}`;
         return axios.get(BASE_URL_SERVER + url);
     }
 

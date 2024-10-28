@@ -96,6 +96,7 @@ function HeaderClient() {
     let sort_param = searchParams.get('sort');
     let minPrice_param = searchParams.get('minPrice');
     let maxPrice_param = searchParams.get('maxPrice');
+    let option_param = searchParams.get('option');
 
     $('#min-price').val(minPrice_param)
     $('#max-price').val(maxPrice_param)
@@ -129,7 +130,9 @@ function HeaderClient() {
         let sort = sort_param ?? 'desc';
         let minPrice = $('#min-price').val() ?? '';
         let maxPrice = $('#max-price').val() ?? '';
-        let searchUrl = `${baseurl}?keyword=${keyword}&size=${size}&category=${category}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+        let optionVal = option_param ?? '';
+
+        let searchUrl = `${baseurl}?keyword=${keyword}&size=${size}&category=${category}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}&option=${optionVal}`;
         console.log(searchUrl);
         window.location.href = searchUrl;
     }

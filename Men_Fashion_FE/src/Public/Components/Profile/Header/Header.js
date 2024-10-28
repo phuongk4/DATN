@@ -55,7 +55,6 @@ function Header() {
     const getUser = async () => {
         await accountService.getInfo()
             .then((res) => {
-                setData(res.data);
                 let user = JSON.parse(JSON.stringify(res.data.data));
                 setData(user);
             })
