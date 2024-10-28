@@ -40,6 +40,7 @@ function ProductList() {
     let sort_param = searchParams.get('sort') ?? '';
     let minPrice_param = searchParams.get('minPrice') ?? '';
     let maxPrice_param = searchParams.get('maxPrice') ?? '';
+    let option_param = searchParams.get('option');
 
     $('#min-price').val(minPrice_param);
     $('#max-price').val(maxPrice_param);
@@ -69,7 +70,7 @@ function ProductList() {
         setCurrentPage(pageNumber);
     };
 
-    function searchMainProduct(categoryID, keywordID, sizeID, sortID, minPriceID, maxPriceID) {
+    function searchMainProduct(categoryID, keywordID, sizeID, sortID, minPriceID, maxPriceID, option) {
         let baseurl = '/products/search';
         let category = categoryID ?? category_param;
         let keyword = keywordID ?? $('#keywordSearch').val();
@@ -77,7 +78,8 @@ function ProductList() {
         let sort = sortID ?? sort_param;
         let minPrice = minPriceID ?? $('#min-price').val() ?? '';
         let maxPrice = maxPriceID ?? $('#max-price').val() ?? '';
-        let searchUrl = `${baseurl}?keyword=${keyword}&size=${size}&category=${category}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+        let optionVal = option ?? option_param ?? '';
+        let searchUrl = `${baseurl}?keyword=${keyword}&size=${size}&category=${category}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}&option=${optionVal}`;
         window.location.href = searchUrl;
     }
 
@@ -112,7 +114,14 @@ function ProductList() {
 
     const searchProduct = (event) => {
         event.preventDefault();
-        searchMainProduct(null, null, null, null, null, null);
+        let option = '';
+        $('.property_val').each(function () {
+            let el = $(this);
+            if (el.is(':checked')) {
+                option = option + el.val() + ',';
+            }
+        })
+        searchMainProduct(null, null, null, null, null, null, option);
     }
 
     const getListCategory = async () => {
@@ -153,7 +162,8 @@ function ProductList() {
 
                             <div className="row">
                                 <div className="col-md-12 mb-5">
-                                    <div className="float-md-left mb-4"><h2 className="text-black h5">Toàn bộ sản phẩm </h2>
+                                    <div className="float-md-left mb-4"><h2 className="text-black h5">Toàn bộ sản
+                                        phẩm </h2>
                                     </div>
                                     <div className="d-flex justify-content-end">
                                         <div className="btn-group">
@@ -213,7 +223,7 @@ function ProductList() {
                                     <div className="site-block-27">
                                         <ul>
                                             <li>
-                                            <a href="#" onClick={() => handleClick(currentPage - 1)}>&lt;</a>
+                                                <a href="#" onClick={() => handleClick(currentPage - 1)}>&lt;</a>
                                             </li>
 
                                             {Array.from({length: totalPages}, (_, i) => (
@@ -273,7 +283,8 @@ function ProductList() {
                                                             <label htmlFor={`property_${property.id}`} className="d-flex"
                                                                    key={property.id}>
                                                                 <input type="checkbox" id={`property_${property.id}`}
-                                                                       className="mr-2 mt-1"/>
+                                                                       className="mr-2 mt-1 property_val"
+                                                                       value={property.id}/>
                                                                 <span className="text-black">{property.name}</span>
                                                                 <span>
                                                                     <img className="ms-1" src={property.thumbnail}

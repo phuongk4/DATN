@@ -25,6 +25,8 @@ function Result() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [attributes, setAttributes] = useState([]);
+    const [checkedItems, setCheckedItems] = useState([]);
+
     const [searchParams] = useSearchParams();
 
     let category_param = searchParams.get('category');
@@ -33,8 +35,14 @@ function Result() {
     let sort_param = searchParams.get('sort');
     let minPrice_param = searchParams.get('minPrice');
     let maxPrice_param = searchParams.get('maxPrice');
+    let option_param = searchParams.get('option');
 
-    function searchMainProduct(categoryID, keywordID, sizeID, sortID, minPriceID, maxPriceID) {
+    if (option_param.endsWith(',')) {
+        option_param = option_param.slice(0, -1);
+    }
+    let arr_option = option_param.split(',');
+
+    function searchMainProduct(categoryID, keywordID, sizeID, sortID, minPriceID, maxPriceID, option) {
         let baseurl = '/products/search';
         let category = categoryID ?? category_param;
         let keyword = keywordID ?? $('#keywordSearch').val();
@@ -42,14 +50,15 @@ function Result() {
         let sort = sortID ?? sort_param;
         let minPrice = minPriceID ?? $('#min-price').val() ?? '';
         let maxPrice = maxPriceID ?? $('#max-price').val() ?? '';
-        let searchUrl = `${baseurl}?keyword=${keyword}&size=${size}&category=${category}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+        let optionVal = option ?? option_param ?? '';
+        let searchUrl = `${baseurl}?keyword=${keyword}&size=${size}&category=${category}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}&option=${optionVal}`;
         window.location.href = searchUrl;
     }
 
     // Lọc sản phẩm theo size và sort
     const filterProduct = () => {
         setLoading(true);
-        searchMainProduct(null, null, $('#size').val(), $('#sort').val(), null, null);
+        searchMainProduct(null, null, $('#size').val(), $('#sort').val(), null, null, null);
     }
 
     const getListCategory = async () => {
@@ -81,18 +90,25 @@ function Result() {
     const handleClick = (event) => {
         event.preventDefault();
         const categoryId = event.currentTarget.getAttribute('data-id');
-        searchMainProduct(categoryId, null, null, null, null, null);
+        searchMainProduct(categoryId, null, null, null, null, null, null);
     }
 
     /* Gọi hàm search */
     const searchProduct = (event) => {
         event.preventDefault();
-        searchMainProduct(null, null, null, null, null, null);
+        let option = '';
+        $('.property_val').each(function () {
+            let el = $(this);
+            if (el.is(':checked')) {
+                option = option + el.val() + ',';
+            }
+        })
+        searchMainProduct(null, null, null, null, null, null, option);
     }
 
     // Gọi api search product với các giá trị từ tham số
     const getListProduct = async () => {
-        await productService.searchProduct(category_param, keyword_param, size_param, sort_param, minPrice_param, maxPrice_param)
+        await productService.searchProduct(category_param, keyword_param, size_param, sort_param, minPrice_param, maxPrice_param, option_param)
             .then((res) => {
                 if (res.status === 200) {
                     console.log("data", res.data)
@@ -104,6 +120,19 @@ function Result() {
                 setLoading(false)
                 console.log(err)
             })
+    }
+
+    function isChecked(propertyId) {
+        return arr_option.includes(propertyId.toString());
+    }
+
+    function handleCheckboxChange(event) {
+        const propertyId = event.target.value;
+        if (checkedItems.includes(propertyId)) {
+            setCheckedItems(checkedItems.filter(id => id !== propertyId));
+        } else {
+            setCheckedItems([...checkedItems, propertyId]);
+        }
     }
 
     useEffect(() => {
@@ -123,7 +152,8 @@ function Result() {
 
                             <div className="row">
                                 <div className="col-md-12 mb-5">
-                                    <div className="float-md-left mb-4"><h2 className="text-black h5">Toàn bộ sản phẩm</h2>
+                                    <div className="float-md-left mb-4"><h2 className="text-black h5">Toàn bộ sản
+                                        phẩm</h2>
                                     </div>
                                     <div className="d-flex justify-content-end">
                                         <div className="btn-group">
@@ -222,7 +252,9 @@ function Result() {
                                                             <label htmlFor={`property_${property.id}`} className="d-flex"
                                                                    key={property.id}>
                                                                 <input type="checkbox" id={`property_${property.id}`}
-                                                                       className="mr-2 mt-1"/>
+                                                                       className="mr-2 mt-1 property_val"
+                                                                       defaultChecked={isChecked(property.id)}
+                                                                       value={property.id}/>
                                                                 <span className="text-black">{property.name}</span>
                                                                 <span>
                                                                     <img className="ms-1" src={property.thumbnail}
