@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers\restapi;
 
+use App\Enums\OrderStatus;
 use App\Enums\ReviewStatus;
 use App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
+use App\Models\OrderItems;
+use App\Models\Orders;
+use App\Models\Products;
 use App\Models\Reviews;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use OpenApi\Annotations as OA;
@@ -37,7 +42,17 @@ class ReviewProductApi extends Api
             $reviews->where('product_id', $product_id);
         }
 
-        $reviews = $reviews->orderBy('id', 'desc')->get();
+        $reviews = $reviews->orderBy('id', 'desc')
+            ->cursor()
+            ->map(function ($item) {
+                $review = $item->toArray();
+
+                $user = User::find($item->user_id);
+
+                $review['user'] = $user->toArray();
+
+                return $review;
+            });
 
         $data = returnMessage(1, $reviews, 'Success!');
         return response()->json($data, 200);
@@ -120,5 +135,44 @@ class ReviewProductApi extends Api
             $data = returnMessage(-1, '', $exception->getMessage());
             return response($data, 400);
         }
+    }
+
+    public function check(Request $request)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        $user = $user->toArray();
+
+        $product_id = $request->input('product_id');
+
+        $completedOrderIds = Orders::where('user_id', $user['id'])
+            ->where('status', OrderStatus::COMPLETED)
+            ->pluck('id');
+
+        $orderID = '';
+        $isValid = false;
+
+        $orderItem = OrderItems::whereIn('order_id', $completedOrderIds)
+            ->where('product_id', $product_id)
+            ->first();
+
+        if ($orderItem) {
+            $orderID = $orderItem->order_id;
+
+            $reviewExists = Reviews::where('product_id', $product_id)
+                ->where('order_id', $orderID)
+                ->exists();
+
+            if ($reviewExists) {
+                $data = returnMessage(1, $isValid, 'success');
+                return response($data, 200);
+            }
+
+            $isValid = true;
+        }
+
+        $res['valid'] = $isValid;
+        $res['order'] = $orderID;
+        $data = returnMessage(1, $res, 'success');
+        return response($data, 200);
     }
 }
