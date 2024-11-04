@@ -29,8 +29,11 @@ class AdminReviewProductApi extends Api
      */
     public function list(Request $request)
     {
-        $reviews = Reviews::where('status', '!=', ReviewStatus::DELETED)
-            ->orderBy('id', 'desc')
+        $reviews = Reviews::where('reviews.status', '!=', ReviewStatus::DELETED)
+            ->join('products', 'reviews.product_id', '=', 'products.id')
+            ->join('users', 'reviews.user_id', '=', 'users.id')
+            ->orderBy('reviews.id', 'desc')
+            ->select('reviews.*', 'products.name as product_name', 'users.email as email', 'users.phone as phone')
             ->get();
         $data = returnMessage(1, $reviews, 'Success!');
         return response()->json($data, 200);
