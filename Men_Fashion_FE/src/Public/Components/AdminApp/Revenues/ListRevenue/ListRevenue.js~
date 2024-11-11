@@ -65,7 +65,7 @@ function ListRevenue() {
                 {
                     name: 'Tổng số tiền',
                     type: 'bar',
-                    barWidth: '60%',
+                    barWidth: '40%',
                     data: yData
                 }
             ]
