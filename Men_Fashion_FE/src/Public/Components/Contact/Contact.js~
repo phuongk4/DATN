@@ -26,11 +26,7 @@ function Contact() {
                 if (res.status === 200) {
                     alert('Gửi liên hệ thành công!');
                 }
-
-                for (let i = 0; i < inputs.length; i++) {
-                    $(inputs[i]).val('');
-                }
-
+                $('#formSendContact').trigger("reset");
                 $('#btnCreate').prop('disabled', false).text('Gửi');
             })
             .catch((err) => {
