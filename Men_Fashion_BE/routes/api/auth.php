@@ -3,9 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\restapi\CartApi;
 use App\Http\Controllers\restapi\CheckoutApi;
-use App\Http\Controllers\restapi\MyCouponApi;
 use App\Http\Controllers\restapi\OrderApi;
-use App\Http\Controllers\restapi\OrderHistoryApi;
 use App\Http\Controllers\restapi\ReviewProductApi;
 use App\Http\Controllers\restapi\UserApi;
 use Illuminate\Support\Facades\Route;
@@ -23,8 +21,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'users'], function () {
     Route::get('get-info', [UserApi::class, 'getUserFromToken'])->name('api.auth.users.information');
-    Route::post('update-info', [UserApi::class, 'updateInfo'])->name('api.auth.users.update');
-    Route::post('change-password', [UserApi::class, 'changePassword'])->name('api.auth.users.change.password');
 });
 
 Route::group(['prefix' => 'carts'], function () {
@@ -49,19 +45,6 @@ Route::group(['prefix' => 'checkout'], function () {
 
 Route::group(['prefix' => 'reviews'], function () {
     Route::post('create', [ReviewProductApi::class, 'store'])->name('api.auth.reviews.store');
-    Route::get('check', [ReviewProductApi::class, 'check'])->name('api.restapi.reviews.check');
-});
-
-Route::group(['prefix' => 'my-coupons'], function () {
-    Route::get('list', [MyCouponApi::class, 'list'])->name('api.auth.my.coupons.list');
-    Route::get('detail', [MyCouponApi::class, 'detail'])->name('api.auth.my.coupons.detail');
-    Route::get('search', [MyCouponApi::class, 'search'])->name('api.auth.my.coupons.search');
-    Route::post('save', [MyCouponApi::class, 'saveCoupon'])->name('api.auth.my.coupons.save');
-    Route::delete('delete', [MyCouponApi::class, 'delete'])->name('api.auth.my.coupons.delete');
-});
-
-Route::group(['prefix' => 'order-histories'], function () {
-    Route::get('list', [OrderHistoryApi::class, 'list'])->name('api.auth.order.histories.list');
 });
 
 

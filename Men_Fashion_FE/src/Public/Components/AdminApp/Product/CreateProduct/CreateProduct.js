@@ -544,7 +544,7 @@ function CreateProduct() {
                                                 </label>
 
                                                 <button className="btn btn-outline-primary btnAddAttribute"
-                                                        type="button" onClick={addTableOption}>Thêm giá trị thuộc tính
+                                                        type="button" onClick={addTableOption}>Thêm biến thể
                                                 </button>
                                             </div>
                                             <div id="render_table_attr">

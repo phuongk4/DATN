@@ -5,60 +5,78 @@ import categoryService from '../../../Service/CategoryService';
 import Header from '../../../Shared/Admin/Header/Header';
 import Sidebar from '../../../Shared/Admin/Sidebar/Sidebar';
 import $ from 'jquery';
-import userService from "../../../Service/UserService";
 
 function UpdateUser() {
-    const [user, setUser] = useState([]);
+    const [category, setCategory] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const {id} = useParams();
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
+    const detailCategory = async () => {
+        await categoryService.adminDetailCategory(id)
+            .then((res) => {
+                console.log("detail category", res.data);
+                setCategory(res.data.data)
+                setLoading(false)
+            })
+            .catch((err) => {
+                setLoading(false)
+                console.log(err)
+            })
+    };
+
+    const getListCategory = async () => {
+        await categoryService.adminListCategory()
+            .then((res) => {
+                if (res.status === 200) {
+                    console.log("data", res.data)
+                    setCategories(res.data.data)
+                    setLoading(false)
+                } else {
+                    alert(res.data.message)
+                    setLoading(false)
+                }
+            })
+            .catch((err) => {
+                setLoading(false)
+                console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        detailCategory();
+        getListCategory();
+    }, [form, id, loading])
+
 
     const onFinish = async () => {
         $('#btnUpdate').prop('disabled', true).text('Đang lưu...');
 
-        let inputs = $('#formUpdate input, #formUpdate textarea, #formUpdate select');
+        let inputs = $('#formUpdate input, #formUpdate textarea');
         for (let i = 0; i < inputs.length; i++) {
-            if (!$(inputs[i]).val() && $(inputs[i]).attr('type') !== 'file' && $(inputs[i]).attr('type') !== 'password') {
+            if (!$(inputs[i]).val() && $(inputs[i]).attr('type') !== 'file') {
                 let text = $(inputs[i]).prev().text();
                 alert(text + ' không được bỏ trống!');
-                $('#btnUpdate').prop('disabled', false).text('Lưu lại');
+                $('#btnUpdate').prop('disabled', false).text('Lưu thay đổi');
                 return
             }
         }
 
         const formData = new FormData($('#formUpdate')[0]);
 
-        await userService.adminUpdateUser(id, formData)
+        await categoryService.adminUpdateCategory(id, formData)
             .then((res) => {
-                console.log("create user", res.data)
-                alert("Lưu tài khoản thành công!")
-                navigate("/admin/users/list")
+                message.success("Thay đổi thành công")
+                navigate("/admin/categories/list")
             })
             .catch((err) => {
                 console.log(err)
-                alert(err.response.data.message)
-                $('#btnUpdate').prop('disabled', false).text('Lưu lại');
+                message.error(err.response.data.message)
+                $('#btnUpdate').prop('disabled', false).text('Lưu thay đổi');
             })
     };
-
-    const detailUser = async () => {
-        await userService.adminDetailUser(id)
-            .then((res) => {
-                setUser(res.data.data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.log(err)
-                setLoading(false);
-            })
-    };
-
-
-    useEffect(() => {
-        detailUser();
-    }, [form, id, loading])
 
     return (
         <>
@@ -86,20 +104,17 @@ function UpdateUser() {
                                         <div className="form-group">
                                             <label htmlFor="full_name">Tên tài khoản</label>
                                             <input type="text" name="full_name" className="form-control" id="full_name"
-                                                   defaultValue={user.full_name}
                                                    required/>
                                         </div>
                                         <div className="row">
                                             <div className="form-group col-md-6">
                                                 <label htmlFor="email">Email</label>
                                                 <input type="email" name="email" className="form-control"
-                                                       defaultValue={user.email}
                                                        id="email" required/>
                                             </div>
                                             <div className="form-group col-md-6">
                                                 <label htmlFor="phone">Số điện thoại</label>
                                                 <input type="text" name="phone" className="form-control"
-                                                       defaultValue={user.phone}
                                                        id="phone" required/>
                                             </div>
                                         </div>
@@ -108,25 +123,23 @@ function UpdateUser() {
                                             <div className="form-group col-md-6">
                                                 <label htmlFor="password">Mật khẩu</label>
                                                 <input type="password" name="password" className="form-control"
-                                                       id="password"/>
+                                                       id="password" required/>
                                             </div>
                                             <div className="form-group col-md-6">
                                                 <label htmlFor="password_confirm">Nhập lại mật khẩu</label>
                                                 <input type="password" name="password_confirm" className="form-control"
-                                                       id="password_confirm"/>
+                                                       id="password_confirm" required/>
                                             </div>
                                         </div>
 
                                         <div className="form-group">
                                             <label htmlFor="address">Địa chỉ</label>
                                             <input type="text" name="address" className="form-control" id="address"
-                                                   defaultValue={user.address}
                                                    required/>
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="about">Giới thiệu</label>
                                             <textarea name="about" id="about" cols="30" rows="5"
-                                                      defaultValue={user.about}
                                                       className="form-control"></textarea>
                                         </div>
 
@@ -134,21 +147,14 @@ function UpdateUser() {
                                             <div className="form-group col-md-6">
                                                 <label htmlFor="avatar">Ảnh đại diện</label>
                                                 <input type="file" name="avatar" className="form-control"
-                                                       id="avatar"/>
-                                                <img src={user.avt} alt="" className="mt-3" style={{width: '100px'}}/>
+                                                       id="avatar" required/>
                                             </div>
                                             <div className="form-group col-md-6">
                                                 <label htmlFor="status">Trạng thái</label>
                                                 <select id="status" name="status" className="form-select">
-                                                    <option selected={user.status === "ĐANG HOẠT ĐỘNG"}
-                                                            value="ĐANG HOẠT ĐỘNG">ĐANG HOẠT ĐỘNG
-                                                    </option>
-                                                    <option selected={user.status === "KHÔNG HOẠT ĐỘNG"}
-                                                            value="KHÔNG HOẠT ĐỘNG">KHÔNG HOẠT ĐỘNG
-                                                    </option>
-                                                    <option selected={user.status === "ĐÃ KHOÁ"}
-                                                            value="ĐÃ KHOÁ">ĐÃ KHOÁ
-                                                    </option>
+                                                    <option value="ĐANG HOẠT ĐỘNG">ĐANG HOẠT ĐỘNG</option>
+                                                    <option value="KHÔNG HOẠT ĐỘNG">KHÔNG HOẠT ĐỘNG</option>
+                                                    <option value="ĐÃ KHOÁ">ĐÃ KHOÁ</option>
                                                 </select>
                                             </div>
                                         </div>

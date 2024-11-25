@@ -16,7 +16,7 @@ function Footer() {
                                     <li><Link to="/products">Cửa hàng</Link></li>
                                     <li><Link to="/about-us">Về chúng tôi</Link></li>
                                     <li><Link to="/contacts">Liên hệ chúng tôi</Link></li>
-                                    <li><Link to="/coupons">Mã giảm giá</Link></li>
+                                    <li><Link to="/news-event">Tin tức & Sự kiện</Link></li>
                                 </ul>
                             </div>
                             <div className="col-md-6 col-lg-4">
@@ -40,8 +40,7 @@ function Footer() {
                         <Link to="#" className="block-6">
                             <img src="/assets/clients/images/hero_1.jpg" alt="Image placeholder"
                                  className="img-fluid rounded mb-4"></img>
-                            <h3 className="font-weight-light  mb-0">Khám phá thời trang nam đẳng cấp, phong cách và hiện
-                                đại.</h3>
+                            <h3 className="font-weight-light  mb-0">Khám phá thời trang nam đẳng cấp, phong cách và hiện đại.</h3>
                             <p>Khuyến mãi từ ngày 15 tháng 9 năm 2024</p>
                         </Link>
                     </div>
@@ -70,10 +69,10 @@ function Footer() {
                 <div className="row pt-5 mt-5 text-center">
                     <div className="col-md-12">
                         <p>
-                            Bản quyền &copy;2024
-                            Bảo lưu mọi quyền | Mẫu này được tạo bằng <i className="icon-heart"
-                                                                         aria-hidden="true"></i> của <Link
-                            to="#" target="_blank" className="text-primary">Nhóm phát triển thời trang nam</Link>
+                            Copyright &copy;2024
+                            All rights reserved | This template is made with <i className="icon-heart"
+                                                                                aria-hidden="true"></i> by <Link
+                            to="#" target="_blank" className="text-primary">Men's Fashion Developer Team</Link>
                         </p>
                     </div>
 

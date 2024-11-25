@@ -289,39 +289,33 @@ class AdminProductApi extends Api
 
             $index = 0;
             foreach ($data_options as $data_option) {
-                $data_values = json_encode($data_option['_options'], JSON_THROW_ON_ERROR);
+                $product_option = new ProductOptions();
 
-                $product_option = ProductOptions::where('product_id', $product->id)->where('value', $data_values)->first();
+                $product_id = $product->id;
 
                 $quantity = $data_option['quantity'];
                 $price = $data_option['price'];
                 $sale_price = $data_option['sale_price'];
                 $description = $data_option['description'];
 
-                $thumbnail = $product->thumbnail;
+                $thumbnail = '';
 
-//                if ($request->hasFile('data_images')) {
-//                    $data_images = $request->file('data_images');
-//                    $image = $data_images[$index];
-//                    $itemPath = $image->store('product', 'public');
-//                    $thumbnail = asset('storage/' . $itemPath);
-//                }
-
-                if ($product_option) {
-                    $product_option->quantity = (integer)$product_option->quantity + (integer)$quantity;
-                } else {
-                    $product_option = new ProductOptions();
-                    $product_option->quantity = $quantity;
+                if ($request->hasFile('data_images')) {
+                    $data_images = $request->file('data_images');
+                    $image = $data_images[$index];
+                    $itemPath = $image->store('product', 'public');
+                    $thumbnail = asset('storage/' . $itemPath);
                 }
-
-                $product_id = $product->id;
 
                 $product_option->product_id = $product_id;
                 $product_option->user_id = $user_id;
+                $product_option->quantity = $quantity;
                 $product_option->price = $price;
                 $product_option->sale_price = $sale_price;
                 $product_option->description = $description;
                 $product_option->thumbnail = $thumbnail;
+
+                $data_values = json_encode($data_option['_options'], JSON_THROW_ON_ERROR);
                 $product_option->value = $data_values;
 
                 $product_option->save();
@@ -461,42 +455,34 @@ class AdminProductApi extends Api
 
             $index = 0;
             foreach ($data_options as $data_option) {
-                $data_values = json_encode($data_option['_options'], JSON_THROW_ON_ERROR);
+                $product_option = new ProductOptions();
 
-                $product_option = ProductOptions::where('product_id', $product->id)->where('value', $data_values)->first();
+                $product_id = $product->id;
 
                 $quantity = $data_option['quantity'];
                 $price = $data_option['price'];
                 $sale_price = $data_option['sale_price'];
                 $description = $data_option['description'];
-//                $thumbnail_uploaded = isset($data_option['thumbnail_uploaded']) ? $data_option['thumbnail_uploaded'] : '';
+                $thumbnail_uploaded = isset($data_option['thumbnail_uploaded']) ? $data_option['thumbnail_uploaded'] : '';
 
-                $thumbnail = $product->thumbnail;
+                $thumbnail = $thumbnail_uploaded;
 
-//                if ($request->hasFile('data_images')) {
-//                    $data_images = $request->file('data_images');
-//                    $image = isset($data_images[$index]) ? $data_images[$index] : null;
-//                    if ($image != null) {
-//                        $itemPath = $image->store('product', 'public');
-//                        $thumbnail = asset('storage/' . $itemPath);
-//                    }
-//                }
-
-                if ($product_option) {
-                    $product_option->quantity = (integer)$product_option->quantity + (integer)$quantity;
-                } else {
-                    $product_option = new ProductOptions();
-                    $product_option->quantity = $quantity;
+                if ($request->hasFile('data_images')) {
+                    $data_images = $request->file('data_images');
+                    $image = $data_images[$index];
+                    $itemPath = $image->store('product', 'public');
+                    $thumbnail = asset('storage/' . $itemPath);
                 }
-
-                $product_id = $product->id;
 
                 $product_option->product_id = $product_id;
                 $product_option->user_id = $user_id;
+                $product_option->quantity = $quantity;
                 $product_option->price = $price;
                 $product_option->sale_price = $sale_price;
                 $product_option->description = $description;
                 $product_option->thumbnail = $thumbnail;
+
+                $data_values = json_encode($data_option['_options'], JSON_THROW_ON_ERROR);
                 $product_option->value = $data_values;
 
                 $product_option->save();

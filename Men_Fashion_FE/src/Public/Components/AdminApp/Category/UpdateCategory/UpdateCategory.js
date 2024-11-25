@@ -73,7 +73,7 @@ function UpdateCategory() {
             })
             .catch((err) => {
                 console.log(err)
-                alert(err.response.data.message)
+                message.error(err.response.data.message)
                 $('#btnUpdate').prop('disabled', false).text('Lưu thay đổi');
             })
     };
