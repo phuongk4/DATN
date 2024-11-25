@@ -25,7 +25,7 @@ class ReviewService {
         return axios.get(BASE_URL_SERVER + API_ENDPOINT.LIST_REVIEW_BY_PRODUCT + '?product_id=' + id, config);
     }
 
-    checkReviewByProduct = (id) => {
+    checkReviewByProduct = (id, or) => {
         const config = {
             headers: {
                 'content-type': 'application/json',
@@ -33,7 +33,7 @@ class ReviewService {
             }
         };
 
-        return axios.get(BASE_URL_SERVER + API_ENDPOINT.CHECK_REVIEW_BY_PRODUCT + '?product_id=' + id, config);
+        return axios.get(BASE_URL_SERVER + API_ENDPOINT.CHECK_REVIEW_BY_PRODUCT + '?product_id=' + id + '&order_id=' + or, config);
     }
 
     sendReview = (data) => {

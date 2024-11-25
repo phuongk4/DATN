@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\restapi;
 
+use App\Enums\MyCouponStatus;
 use App\Enums\OrderMethod;
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Carts;
+use App\Models\Coupons;
+use App\Models\MyCoupons;
 use App\Models\OrderItems;
 use App\Models\Orders;
+use App\Models\ProductOptions;
 use App\Models\Products;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,6 +23,11 @@ class CheckoutApi extends Api
 {
     protected $user;
 
+    /**
+     * Instantiate a new CheckoutController instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->user = JWTAuth::parseToken()->authenticate()->toArray();
@@ -56,6 +65,13 @@ class CheckoutApi extends Api
     public function checkout(Request $request)
     {
         try {
+            $user_id = $this->user['id'];
+            $carts = Carts::where('user_id', $user_id)->get();
+
+            if ($carts->count() == 0) {
+                $data = returnMessage(-1, 'Your cart is empty!', 'Your cart is empty!');
+                return response()->json($data, 400);
+            }
             $order_created = $this->handleCheckout($request);
             if ($order_created) {
                 $user_id = $this->user['id'];
@@ -105,6 +121,13 @@ class CheckoutApi extends Api
     public function returnCheckout(Request $request)
     {
         try {
+            $user_id = $this->user['id'];
+            $carts = Carts::where('user_id', $user_id)->get();
+            if ($carts->count() == 0) {
+                $data = returnMessage(-1, 'Your cart is empty!', 'Your cart is empty!');
+                return response()->json($data, 400);
+            }
+
             $url = session('url_prev', '/');
 
             if ($request->vnp_ResponseCode == "00") {
@@ -238,6 +261,13 @@ class CheckoutApi extends Api
      */
     public function checkoutByVNPay(Request $request)
     {
+        $user_id = $this->user['id'];
+        $carts = Carts::where('user_id', $user_id)->get();
+        if ($carts->count() == 0) {
+            $data = returnMessage(-1, 'Your cart is empty!', 'Your cart is empty!');
+            return response()->json($data, 400);
+        }
+
         $emailTo = $request->input('email');
         $money = $request->input('c_total');
         $token = $request->input('_token');
@@ -346,11 +376,13 @@ class CheckoutApi extends Api
      * @param \Illuminate\Http\Request $request
      * @return boolean
      */
-    private function handleCheckout($request)
+    private function handleCheckout(Request $request)
     {
         $order = new Orders();
 
+        $coupon_id = $request->input('coupon_id') ?? '';
         $user_id = $this->user['id'];
+
         $carts = Carts::where('user_id', $user_id)->get();
 
         $full_name = $request->input('full_name');
@@ -359,8 +391,8 @@ class CheckoutApi extends Api
         $c_address = $request->input('c_address');
         $d_address = $request->input('d_address');
         $total_product = $request->input('c_total_product');
-        $shipping_price = $request->input('c_shipping_price');
-        $discount_price = $request->input('c_discount_price');
+        $shipping_price = $request->input('c_shipping_price') ?? 0;
+        $discount_price = $request->input('c_discount_price') ?? 0;
         $total = $request->input('c_total');
         $notes = $request->input('c_order_notes');
         $order_method = $request->input('order_method') ?? OrderMethod::IMMEDIATE;
@@ -381,26 +413,51 @@ class CheckoutApi extends Api
         $order->status = $status;
 
         $order->user_id = $user_id;
+        $order->coupon_id = $coupon_id != "" ? $coupon_id : null;
 
         $order_created = $order->save();
+
+        $coupon = Coupons::find($coupon_id);
+        if ($coupon) {
+            $coupon->number_used = (int)$coupon->number_used + 1;
+            $coupon->save();
+        }
+
+        $myCoupon = MyCoupons::where('user_id', $user_id)
+            ->where('coupon_id', $coupon_id)
+            ->where('status', MyCouponStatus::UNUSED)
+            ->first();
+
+        if ($myCoupon) {
+            $myCoupon->status = MyCouponStatus::USED;
+            $myCoupon->save();
+        }
 
         foreach ($carts as $cart) {
             $order_item = new OrderItems();
 
             $order_item->product_id = $cart->product_id;
             $order_item->quantity = $cart->quantity;
-            $order_item->price = $cart->product->price;
+
             $order_item->order_id = $order->id;
             $order_item->value = $cart->values;
+
+            $option = ProductOptions::find($cart->values);
+
+            $order_item->price = $option->sale_price ?? $cart->product->sale_price;
 
             $order_item->save();
 
             /**
              * Xử lí khi mua đơn hàng sẽ trừ đi số sản phẩm đã mua
              * */
-            $product = Products::find($cart->product_id);
-            $product->quantity -= $cart->quantity;
-            $product->save();
+//            $product = Products::find($cart->product_id);
+//            $product->quantity -= $cart->quantity;
+//            $product->save();
+
+            $option->quantity -= $cart->quantity;
+            $option->save();
+
         }
 
         return $order_created;

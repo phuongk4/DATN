@@ -32,7 +32,7 @@ function Register() {
 
         let check = isVietnamesePhoneNumber(phone);
         if (!check) {
-            // message.error('Số điện thoại phải điền đúng định dạng')
+            // alert('Số điện thoại phải điền đúng định dạng')
             $('.message_error').removeClass('d-none');
             $('#btnRegister').prop('disabled', false).text('Đăng ký');
             return;

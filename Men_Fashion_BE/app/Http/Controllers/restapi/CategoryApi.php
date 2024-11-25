@@ -21,8 +21,9 @@ class CategoryApi extends Api
             ->cursor()
             ->map(function ($item) {
                 $category = $item->toArray();
-                $count = Products::where('category_id', $item->id)->where('status', '!=', ProductStatus::DELETED)->count();
-                $category['count'] = $count;
+                $products = Products::where('category_id', $item->id)->where('status', ProductStatus::ACTIVE)->get();
+                $category['count'] = $products->count();
+                $category['products'] = $products->toArray();
                 return $category;
             });
 

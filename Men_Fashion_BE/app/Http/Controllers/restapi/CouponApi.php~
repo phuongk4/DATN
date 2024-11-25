@@ -25,6 +25,7 @@ class CouponApi extends Api
         }
     }
 
+
     public function search(Request $request)
     {
         try {

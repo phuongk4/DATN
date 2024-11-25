@@ -202,6 +202,7 @@ function HeaderClient() {
                                 <a href="#">Mục lục</a>
                                 <ul className="dropdown">
                                     <li><a href="/products">Cửa hàng</a></li>
+                                    <li><a href="/coupons">Mã giảm giá</a></li>
                                     <li><a href="/about-us">Về chúng tôi</a></li>
                                     <li><a href="/contact">Liên hệ</a></li>
                                 </ul>
