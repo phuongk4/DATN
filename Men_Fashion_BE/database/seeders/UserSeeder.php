@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'full_name' => 'user',
+                'full_name' => 'demo',
                 'email' => 'user@gmail.com',
                 'password' => Hash::make('123456'),
                 'phone' => '0989889889',
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
                 'status' => UserStatus::ACTIVE,
             ],
             [
-                'full_name' => 'admin',
+                'full_name' => 'demo',
                 'email' => 'admin@gmail.com',
                 'password' => Hash::make('123456'),
                 'phone' => '0986886886',

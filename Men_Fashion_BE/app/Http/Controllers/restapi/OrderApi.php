@@ -4,11 +4,13 @@ namespace App\Http\Controllers\restapi;
 
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Api;
-use App\Models\OrderHistories;
+use App\Http\Controllers\Controller;
+use App\Models\Attributes;
 use App\Models\OrderItems;
 use App\Models\Orders;
 use App\Models\ProductOptions;
 use App\Models\Products;
+use App\Models\Properties;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -167,16 +169,6 @@ class OrderApi extends Api
                 return response($data, 404);
             }
 
-            if ($order->status == OrderStatus::CANCELED) {
-                $data = returnMessage(0, null, 'Đơn hàng đã huỷ!');
-                return response($data, 400);
-            }
-
-            if ($order->status == OrderStatus::COMPLETED) {
-                $data = returnMessage(0, null, 'Đơn hàng đã hoàn thành!');
-                return response($data, 400);
-            }
-
             $reason_cancel = $request->input('reason_cancel');
 
             $order->status = OrderStatus::CANCELED;
@@ -186,17 +178,15 @@ class OrderApi extends Api
             $order_items = OrderItems::where('order_id', $order->id)->get();
 
             $order_items->each(function ($item) {
+//                $product = Products::find($item->product_id);
+//                $qty = $item->product->quantity + $item->quantity;
+//                $product->quantity = $qty;
+//                $product->save();
+
                 $option = ProductOptions::find($item->value);
                 $option->quantity = $option->quantity + $item->quantity;
                 $option->save();
             });
-
-            $order_history = new OrderHistories();
-            $order_history->order_id = $order->id;
-            $order_history->status = OrderStatus::CANCELED;
-            $order_history->user_id = $order->user_id;
-            $order_history->notes = $order->reason_cancel;
-            $order_history->save();
 
             $data = returnMessage(1, $order, 'Cancel success');
             return response($data, 200);

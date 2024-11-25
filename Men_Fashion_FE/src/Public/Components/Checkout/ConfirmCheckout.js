@@ -62,7 +62,7 @@ function ConfirmCheckout() {
             })
             .catch((err) => {
                 console.log(err)
-                alert("Error, Vui lòng thử lại sau!")
+                message.error("Error, Vui lòng thử lại sau!")
                 $('#btnCheckout').prop('disabled', false).text('Place Order');
             })
     }
