@@ -287,6 +287,8 @@ class AdminProductApi extends Api
 
             $data_options = json_decode($data_options, true);
 
+            $quantity_m = 0;
+
             $index = 0;
             foreach ($data_options as $data_option) {
                 $data_values = json_encode($data_option['_options'], JSON_THROW_ON_ERROR);
@@ -325,8 +327,12 @@ class AdminProductApi extends Api
                 $product_option->value = $data_values;
 
                 $product_option->save();
+                $quantity_m += $product_option->quantity;
                 $index++;
             }
+
+            $product->quantity = $quantity_m;
+            $success = $product->save();
 
             if ($success) {
                 $data = returnMessage(1, $product, 'Success, Create product successful!');
@@ -459,6 +465,7 @@ class AdminProductApi extends Api
 
             $data_options = json_decode($data_options, true);
 
+            $quantity_m = 0;
             $index = 0;
             foreach ($data_options as $data_option) {
                 $data_values = json_encode($data_option['_options'], JSON_THROW_ON_ERROR);
@@ -500,8 +507,13 @@ class AdminProductApi extends Api
                 $product_option->value = $data_values;
 
                 $product_option->save();
+
+                $quantity_m += $product_option->quantity;
                 $index++;
             }
+
+            $product->quantity = $quantity_m;
+            $success = $product->save();
 
             if ($success) {
                 $data = returnMessage(1, $product, 'Success, Update product successful!');

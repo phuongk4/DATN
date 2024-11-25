@@ -6,7 +6,7 @@ use BenSampo\Enum\Enum;
 
 final class OrderMethod extends Enum
 {
-    const IMMEDIATE = "Thanh toán khi nhận hàng";
-    const ELECTRONIC_WALLET = "Ví điện tử";
-    const CARD_CREDIT = "Debit or Credit Card";
+    const IMMEDIATE = "Cash on Delivery";
+    const ELECTRONIC_WALLET = "E-wallet";
+    const CARD_CREDIT = "Debit or credit card";
 }

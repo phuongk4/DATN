@@ -7,11 +7,11 @@ import Sidebar from '../../../Shared/Admin/Sidebar/Sidebar';
 import $ from 'jquery';
 
 /**
- * DetailAttribute component
+ * DetailContact component
  *
  * @description Component for update attribute
  * @param {string} id - Id of attribute
- * @returns {ReactElement} DetailAttribute component
+ * @returns {ReactElement} DetailContact component
  */
 function DetailAttribute() {
     const {id} = useParams();
@@ -81,7 +81,7 @@ function DetailAttribute() {
             .catch((err) => {
                 setLoading(false)
                 console.log(err)
-                message.error("Thay đổi thất bại")
+                alert("Thay đổi thất bại")
             })
     };
 
@@ -94,7 +94,7 @@ function DetailAttribute() {
                 <nav>
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to="/admin/dashboard">Trang quản trị</Link></li>
-                        <li className="breadcrumb-item">Danh mục</li>
+                        <li className="breadcrumb-item">Thuộc tính</li>
                         <li className="breadcrumb-item active">Chỉnh sửa thuộc tính</li>
                     </ol>
                 </nav>

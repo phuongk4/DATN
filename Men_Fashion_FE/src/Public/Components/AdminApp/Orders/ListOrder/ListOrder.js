@@ -149,6 +149,7 @@ function ListOrder() {
         getListOrder();
         loadFn();
     }, []);
+
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams({
             pagination,
