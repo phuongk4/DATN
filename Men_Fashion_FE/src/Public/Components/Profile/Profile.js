@@ -11,7 +11,7 @@ function Profile() {
     const email = sessionStorage.getItem("email")
     const Token = sessionStorage.getItem("accessToken")
 
-    const [data, setData] = useState([]);
+    const [users, setUsers] = useState([]);
 
     const checkLogin = async () => {
         if (email == null || Token == null) {
@@ -30,10 +30,8 @@ function Profile() {
     const getUser = async () => {
         await accountService.getInfo()
             .then((res) => {
-                setData(res.data);
-                console.log("data:", JSON.parse(JSON.stringify(res.data)));
                 let user = JSON.parse(JSON.stringify(res.data.data));
-                setData(user);
+                setUsers(user);
             })
             .catch((err) => {
                 console.log(err)
@@ -43,15 +41,13 @@ function Profile() {
                     sessionStorage.clear();
                     navigate('/login');
                 } else {
-                    navigate('/not-found');
+                    navigate('/login');
                 }
             });
     };
 
     const updateInfo = async () => {
-        let id = sessionStorage.getItem('id');
-
-        $('#btnSave').prop('disabled', true).text('Saving Changes...');
+        $('#btnSave').prop('disabled', true).text('Đang lưu...');
 
         let inputs = $('#formUpdateInfo input, #formUpdateInfo textarea, #formUpdateInfo select');
         for (let i = 0; i < inputs.length; i++) {
@@ -65,7 +61,7 @@ function Profile() {
 
         const formData = new FormData($('#formUpdateInfo')[0]);
 
-        await accountService.updateAccount(id, formData)
+        await accountService.updateAccount(formData)
             .then((res) => {
                 console.log("update", res.data)
                 alert("Thay đổi thông tin thành công!")
@@ -73,7 +69,8 @@ function Profile() {
                 $('#btnSave').prop('disabled', false).text('Lưu thay đổi');
             })
             .catch((err) => {
-                message.error("Thay đổi thông tin thất bại! Vui lòng thử lại sau")
+                alert("Thay đổi thông tin thất bại! Vui lòng thử lại sau")
+                console.log(err);
                 $('#btnSave').prop('disabled', false).text('Lưu thay đổi');
             })
     };
@@ -87,60 +84,66 @@ function Profile() {
             }
         };
 
-        $('#input_avatar').change(function (event) {
+        $('#avt').change(function (event) {
             loadFile(event);
         });
     }
 
     function showUpload() {
-        $('#input_avatar').trigger('click');
+        $('#avt').trigger('click');
     }
 
-    clickHandleImage();
-
     const changePass = async () => {
-        $('#btnChangePass').prop('disabled', true).text('Changing...');
-        let id = sessionStorage.getItem('id');
+        const btnChangePass = $('#btnChangePass');
+        btnChangePass.prop('disabled', true).text('Đang thay đổi...');
 
-        var oldPassword = document.getElementById("currentPassword").value;
-        var password = document.getElementById("newPassword").value;
-        var confirmPassword = document.getElementById("renewPassword").value;
+        let oldPassword = document.getElementById("currentPassword").value;
+        let password = document.getElementById("newPassword").value;
+        let confirmPassword = document.getElementById("renewPassword").value;
 
         if (!oldPassword) {
-            alert("Vui lòng nhập mật khẩu hiện tại!")
+            alert("Vui lòng nhập mật khẩu hiện tại!");
+            btnChangePass.prop('disabled', false).text('Lưu thay đổi');
             return;
         }
 
         if (!password) {
-            alert("Vui lòng nhập mật khẩu mới!")
+            alert("Vui lòng nhập mật khẩu mới!");
+            btnChangePass.prop('disabled', false).text('Lưu thay đổi');
             return;
         }
 
         if (!confirmPassword) {
-            alert("Vui lòng nhập mật khẩu xác nhận!")
+            alert("Vui lòng nhập mật khẩu xác nhận!");
+            btnChangePass.prop('disabled', false).text('Lưu thay đổi');
             return;
         }
 
         let data = {
-            oldPassword: oldPassword,
-            password: password,
-            confirmPassword: confirmPassword
+            password: oldPassword,
+            newpassword: password,
+            renewpassword: confirmPassword
+        };
+
+        try {
+            const res = await accountService.changePassAccount(data);
+            console.log("change pass: ", res.data);
+            alert("Đổi mật khẩu thành công!");
+
+            $('#currentPassword').val('');
+            $('#newPassword').val('');
+            $('#renewPassword').val('');
+
+        } catch (err) {
+            console.log(err);
+            alert(err.response.data.message);
+        } finally {
+            btnChangePass.prop('disabled', false).text('Lưu thay đổi');
         }
-        await accountService.changePassAccount(id, data)
-            .then((res) => {
-                $('#btnChangePass').prop('disabled', false).text('Lưu thay đổi');
-                console.log("change pass: ", res.data)
-                alert("Đổi mật khẩu thành công!")
-                $('#formChangePassword')[0].reset();
-            })
-            .catch((err) => {
-                $('#btnChangePass').prop('disabled', false).text('Lưu thay đổi');
-                console.log(err)
-                message.error("Đổi mật khẩu thất bại! Vui lòng thử lại sau")
-            })
     };
 
     useEffect(() => {
+        clickHandleImage();
         checkLogin();
         getUser();
         check_pass();
@@ -167,9 +170,9 @@ function Profile() {
                         <div className="col-xl-4">
                             <div className="card">
                                 <div className="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                                    <img src={data.avatar} alt="Profile" className="rounded-circle" width="100px"/>
-                                    <h2>{data.fullName}</h2>
-                                    <h3>{data.userName}</h3>
+                                    <img src={users.avt} alt="Profile" className="rounded-circle" width="100px"/>
+                                    <h2>{users.full_name}</h2>
+                                    <h3>{users.email}</h3>
                                 </div>
                             </div>
                         </div>
@@ -199,31 +202,19 @@ function Profile() {
                                             <h5 className="card-title">Chi tiết</h5>
                                             <div className="row">
                                                 <div className="col-lg-3 col-md-4 label ">Tên đầy đủ:</div>
-                                                <div className="col-lg-9 col-md-8">{data.fullName}</div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-lg-3 col-md-4 label">Tên đăng nhập:</div>
-                                                <div className="col-lg-9 col-md-8">{data.userName}</div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-lg-3 col-md-4 label">Giới tính</div>
-                                                <div className="col-lg-9 col-md-8">{data.gender}</div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-lg-3 col-md-4 label">Ngày sinh</div>
-                                                <div className="col-lg-9 col-md-8">{data.birthday}</div>
+                                                <div className="col-lg-9 col-md-8">{users.full_name}</div>
                                             </div>
                                             <div className="row">
                                                 <div className="col-lg-3 col-md-4 label">Địa chỉ</div>
-                                                <div className="col-lg-9 col-md-8">{data.addressInfo}</div>
+                                                <div className="col-lg-9 col-md-8">{users.address}</div>
                                             </div>
                                             <div className="row">
                                                 <div className="col-lg-3 col-md-4 label">Số điện thoại</div>
-                                                <div className="col-lg-9 col-md-8">{data.phoneNum}</div>
+                                                <div className="col-lg-9 col-md-8">{users.phone}</div>
                                             </div>
                                             <div className="row">
                                                 <div className="col-lg-3 col-md-4 label">Email</div>
-                                                <div className="col-lg-9 col-md-8">{data.userEmail}</div>
+                                                <div className="col-lg-9 col-md-8">{users.email}</div>
                                             </div>
                                         </div>
                                         <div className="tab-pane fade profile-edit pt-3" id="profile-edit">
@@ -235,7 +226,7 @@ function Profile() {
                                                            className="col-md-4 col-lg-3 col-form-label">Ảnh đại
                                                         diện: </label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <img style={{borderRadius: "50%"}} src={data.avatar}
+                                                        <img style={{borderRadius: "50%"}} src={users.avt}
                                                              alt="Profile" width="100px" id="avtPreview"/>
                                                         <div className="pt-2">
                                                             <button type="button" onClick={showUpload} id="btnUploadAvt"
@@ -250,64 +241,46 @@ function Profile() {
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3 d-none">
-                                                    <label htmlFor="input_avatar"
+                                                    <label htmlFor="avt"
                                                            className="col-md-4 col-lg-3 col-form-label">Ảnh đại
                                                         diện: </label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="file" type="file" className="form-control"
-                                                               id="input_avatar"/>
+                                                        <input name="avatar" type="file" className="form-control"
+                                                               id="avt"/>
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
-                                                    <label htmlFor="fullName"
+                                                    <label htmlFor="full_name"
                                                            className="col-md-4 col-lg-3 col-form-label">Tên đầy
                                                         đủ: </label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="fullName" type="text" className="form-control"
-                                                               id="fullName" defaultValue={data.fullName}/>
+                                                        <input name="full_name" type="text" className="form-control"
+                                                               id="full_name" defaultValue={users.full_name}/>
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
-                                                    <label htmlFor="Job"
-                                                           className="col-md-4 col-lg-3 col-form-label">Giới
-                                                        tính</label>
-                                                    <div className="col-md-8 col-lg-9">
-                                                        <input name="gender" type="text" className="form-control"
-                                                               id="gender" defaultValue={data.gender}/>
-                                                    </div>
-                                                </div>
-                                                <div className="row mb-3">
-                                                    <label htmlFor="birthday"
-                                                           className="col-md-4 col-lg-3 col-form-label">Ngày
-                                                        sinh</label>
-                                                    <div className="col-md-8 col-lg-9">
-                                                        <input name="birthday" type="text" className="form-control"
-                                                               id="birthday" defaultValue={data.birthday}/>
-                                                    </div>
-                                                </div>
-                                                <div className="row mb-3">
-                                                    <label htmlFor="addressInfo"
+                                                    <label htmlFor="address"
                                                            className="col-md-4 col-lg-3 col-form-label">Đia chỉ</label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="addressInfo" type="text" className="form-control"
-                                                               id="addressInfo" defaultValue={data.addressInfo}/>
+                                                        <input name="address" type="text" className="form-control"
+                                                               id="address" defaultValue={users.address}/>
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
-                                                    <label htmlFor="phoneNum"
+                                                    <label htmlFor="phone"
                                                            className="col-md-4 col-lg-3 col-form-label">Số điện
                                                         thoại</label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="phoneNum" type="text" className="form-control"
-                                                               id="phoneNum" defaultValue={data.phoneNum}/>
+                                                        <input name="phone" type="text" className="form-control"
+                                                               id="phone" defaultValue={users.phone}/>
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
-                                                    <label htmlFor="userEmail"
+                                                    <label htmlFor="email"
                                                            className="col-md-4 col-lg-3 col-form-label">Email</label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="userEmail" type="email" className="form-control"
-                                                               id="userEmail" defaultValue={data.userEmail}/>
+                                                        <input name="email" type="email" className="form-control"
+                                                               id="email" defaultValue={users.email}/>
                                                     </div>
                                                 </div>
                                                 <div className="text-center">

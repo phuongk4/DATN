@@ -56,7 +56,7 @@ function ProductDetail() {
     }
 
     const checkReviewProduct = async () => {
-        await reviewService.checkReviewByProduct(id)
+        await reviewService.checkReviewByProduct(id, '')
             .then((res) => {
                 if (res.status === 200) {
                     let check = res.data.data;
@@ -69,39 +69,6 @@ function ProductDetail() {
             })
             .catch((err) => {
                 console.log(err)
-            })
-    }
-
-    const reviewProduct = async () => {
-        LoadingPage();
-        $('#btnSendReview').prop('disabled', true).text('Đang gửi đánh giá...');
-
-        let inputs = $('#formReviewProduct input, #formReviewProduct textarea, #formReviewProduct select');
-        for (let i = 0; i < inputs.length; i++) {
-            if (!$(inputs[i]).val() && $(inputs[i]).attr('type') != 'radio' && $(inputs[i]).attr('type') != 'hidden') {
-                let text = $(inputs[i]).prev().text();
-                alert(text + ' không được bỏ trống!');
-                $('#btnSendReview').prop('disabled', false).text('Gửi đánh giá');
-                return
-            }
-        }
-
-        const formData = new FormData($('#formReviewProduct')[0]);
-
-        await reviewService.sendReview(formData)
-            .then((res) => {
-                if (res.status === 200) {
-                    alert('Đánh giá sản phẩm thành công!')
-                    LoadingPage();
-                    getReviewProduct();
-                    checkReviewProduct();
-                }
-            })
-            .catch((err) => {
-                alert('Đã xảy ra lỗi. Vui lòng thử lại sau')
-                LoadingPage();
-                console.log(err)
-                $('#btnSendReview').prop('disabled', false).text('Gửi đánh giá');
             })
     }
 
@@ -368,7 +335,7 @@ function ProductDetail() {
                                         <div className="customer_name_review_status">
                                             <div className="customer_name">{review.user.email}</div>
                                             <div className="customer_review">
-                                                {Array.from({ length: 5 }).map((_, i) => (
+                                                {Array.from({length: 5}).map((_, i) => (
                                                     <i
                                                         key={i}
                                                         className={`fa-solid fa-star ${i < review.stars ? 'filled' : ''}`}
@@ -387,90 +354,6 @@ function ProductDetail() {
                                 </div>
                             ))}
                         </div>
-
-                        {isReview && (
-                            <div className="">
-                                <h5 className="text-start text-success mt-3">Đánh giá của bạn...</h5>
-
-                                <Form id="formReviewProduct" onFinish={reviewProduct}>
-                                    <div className="form-group">
-                                        <label htmlFor="option-sm" className="d-flex mr-3">
-                                    <span className="d-inline-block mr-2"
-                                          style={{top: '0', position: 'relative'}}><input
-                                        type="radio" id="option-sm" value="1" name="stars"/></span> <span
-                                            className="d-inline-block text-black">
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star none_active"></i>
-                                        <i className="fa-solid fa-star none_active"></i>
-                                        <i className="fa-solid fa-star none_active"></i>
-                                        <i className="fa-solid fa-star none_active"></i> (Rất Tệ)
-                                    </span>
-                                        </label>
-                                        <label htmlFor="option-md" className="d-flex mr-3">
-                                    <span className="d-inline-block mr-2"
-                                          style={{top: '0', position: 'relative'}}><input
-                                        type="radio" id="option-md" value="2" name="stars"/></span> <span
-                                            className="d-inline-block text-black">
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star none_active"></i>
-                                        <i className="fa-solid fa-star none_active"></i>
-                                        <i className="fa-solid fa-star none_active"></i> (Tệ)
-                                </span>
-                                        </label>
-                                        <label htmlFor="option-lg" className="d-flex mr-3">
-                                    <span className="d-inline-block mr-2"
-                                          style={{top: '0', position: 'relative'}}><input
-                                        type="radio" id="option-lg" value="3" name="stars"/></span> <span
-                                            className="d-inline-block text-black"> <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star none_active"></i>
-                                        <i className="fa-solid fa-star none_active"></i> (Bình thường)</span>
-                                        </label>
-                                        <label htmlFor="option-xl" className="d-flex mr-3">
-                                    <span className="d-inline-block mr-2"
-                                          style={{top: '0', position: 'relative'}}><input
-                                        type="radio" id="option-xl" value="4" name="stars"/></span> <span
-                                            className="d-inline-block text-black">   <i
-                                            className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star none_active"></i> (Tốt)</span>
-                                        </label>
-                                        <label htmlFor="option-xxl" className="d-flex mr-3">
-                                    <span className="d-inline-block mr-2"
-                                          style={{top: '0', position: 'relative'}}><input
-                                        type="radio" id="option-xxl" value="5" name="stars"/></span> <span
-                                            className="d-inline-block text-black"> <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star"></i>
-                                        <i className="fa-solid fa-star"></i> (Rất Tốt)</span>
-                                        </label>
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="title">Tiêu đề</label>
-                                        <input type="text" className="form-control" id="title" name="title" required/>
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="content">Nội dung</label>
-                                        <textarea className="form-control" id="content" name="content"
-                                                  rows="5"></textarea>
-                                    </div>
-
-                                    <div className="d-none">
-                                        <input type="hidden" id="order_id" name="order_id" defaultValue={order}/>
-                                        <input type="hidden" id="product_id" name="product_id" defaultValue={id}/>
-                                    </div>
-
-                                    <button type="submit" className="btn btn-secondary" id="btnSendReview">Gửi đánh
-                                        giá
-                                    </button>
-                                </Form>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
