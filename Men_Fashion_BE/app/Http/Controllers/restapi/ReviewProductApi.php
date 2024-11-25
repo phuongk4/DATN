@@ -5,15 +5,11 @@ namespace App\Http\Controllers\restapi;
 use App\Enums\OrderStatus;
 use App\Enums\ReviewStatus;
 use App\Http\Controllers\Api;
-use App\Http\Controllers\Controller;
-use App\Models\OrderItems;
 use App\Models\Orders;
-use App\Models\Products;
 use App\Models\Reviews;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use OpenApi\Annotations as OA;
 
 class ReviewProductApi extends Api
 {
@@ -139,40 +135,38 @@ class ReviewProductApi extends Api
 
     public function check(Request $request)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-        $user = $user->toArray();
+        $user = JWTAuth::parseToken()->authenticate()->toArray();
 
         $product_id = $request->input('product_id');
+        $order_id = $request->input('order_id');
 
-        $completedOrderIds = Orders::where('user_id', $user['id'])
-            ->where('status', OrderStatus::COMPLETED)
-            ->pluck('id');
-
-        $orderID = '';
         $isValid = false;
+        $orderID = null;
 
-        $orderItem = OrderItems::whereIn('order_id', $completedOrderIds)
-            ->where('product_id', $product_id)
-            ->first();
+        $review = null;
 
-        if ($orderItem) {
-            $orderID = $orderItem->order_id;
+        if ($product_id && $order_id) {
+            $order = Orders::where('id', $order_id)
+                ->where('user_id', $user['id'])
+                ->where('status', OrderStatus::COMPLETED)
+                ->first();
+            if ($order) {
+                $review = Reviews::where('product_id', $product_id)
+                    ->where('order_id', $order_id)
+                    ->where('user_id', $user['id'])
+                    ->first();
 
-            $reviewExists = Reviews::where('product_id', $product_id)
-                ->where('order_id', $orderID)
-                ->exists();
+                if ($review) {
+                    $user = User::find($review->user_id);
+                    $review = $review->toArray();
+                    $review['user'] = $user->toArray();
 
-            if ($reviewExists) {
-                $data = returnMessage(1, $isValid, 'success');
-                return response($data, 200);
+                    $isValid = true;
+                    $orderID = $order_id;
+                }
             }
-
-            $isValid = true;
         }
 
-        $res['valid'] = $isValid;
-        $res['order'] = $orderID;
-        $data = returnMessage(1, $res, 'success');
-        return response($data, 200);
+        return response(returnMessage(1, ['valid' => $isValid, 'order' => $orderID, 'review' => $review], 'success'), 200);
     }
 }
