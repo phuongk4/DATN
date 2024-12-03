@@ -136,6 +136,18 @@ function ProductList() {
             })
     }
 
+    const goCategory = (event, id) => {
+        event.preventDefault();
+        let option = '';
+        $('.property_val').each(function () {
+            let el = $(this);
+            if (el.is(':checked')) {
+                option = option + el.val() + ',';
+            }
+        })
+        searchMainProduct(id, null, null, null, null, null, option);
+    };
+
     useEffect(() => {
         getListProduct();
         getListCategory();
@@ -250,7 +262,7 @@ function ProductList() {
                                             <li className="mb-1" key={category.id}>
                                                 <a href={'/products?category=' + category.id} data-id={category.id}
                                                    className={`d-flex category${category_param}`}
-                                                   onClick={handleClick}>
+                                                   onClick={(event) => goCategory(event, category.id)}>
                                                     <span>{category.name}</span>
                                                     <span className="text-black ml-auto">({category.count})</span>
                                                 </a>

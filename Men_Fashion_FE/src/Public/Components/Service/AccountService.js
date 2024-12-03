@@ -3,12 +3,12 @@ import axios from "axios";
 
 const API_ENDPOINT = {
     //
-    GET_USER_INFO: "/api/users/get-info/",
+    GET_USER_INFO: "/api/users/get-info",
     //
-    LIST_ACCOUNT: "/api/user/list",
-    DETAIL_ACCOUNT: "/api/user/detail/",
-    UPDATE_ACCOUNT: "/api/user/update-info/",
-    CHANGE_PASSWORD_ACCOUNT: "/api/user/change-pass/",
+    LIST_ACCOUNT: "/api/users/list",
+    DETAIL_ACCOUNT: "/api/users/detail/",
+    UPDATE_ACCOUNT: "/api/users/update-info",
+    CHANGE_PASSWORD_ACCOUNT: "/api/users/change-password",
     //
     ADMIN_LIST_ACCOUNT: "/admin/api/user/list",
     ADMIN_LIST_STATUS_ACCOUNT: "/admin/api/user/list/",
@@ -40,24 +40,24 @@ class AccountService {
         return axios.get(BASE_URL_SERVER + API_ENDPOINT.LIST_ACCOUNT, config);
     }
 
-    updateAccount = (id, data) => {
+    updateAccount = (data) => {
         const config = {
             headers: {
                 'content-type': 'multipart/form-data',
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             }
         };
-        return axios.put(BASE_URL_SERVER + API_ENDPOINT.UPDATE_ACCOUNT + id, data, config);
+        return axios.post(BASE_URL_SERVER + API_ENDPOINT.UPDATE_ACCOUNT, data, config);
     }
 
-    changePassAccount = (id, data) => {
+    changePassAccount = (data) => {
         const config = {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             }
         };
-        return axios.put(BASE_URL_SERVER + API_ENDPOINT.CHANGE_PASSWORD_ACCOUNT + id, data, config);
+        return axios.post(BASE_URL_SERVER + API_ENDPOINT.CHANGE_PASSWORD_ACCOUNT, data, config);
     }
 
     detailAccount = (id) => {

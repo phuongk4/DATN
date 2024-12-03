@@ -4,10 +4,10 @@ import axios from "axios";
 const API_ENDPOINT = {
     POST_CONTACT: "/api/contacts/create",
     // ADMIN
-    LIST_CONTACT: "/admin/api/contacts/list",
-    DETAIL_CONTACT: "/admin/api/contacts/detail/",
-    UPDATE_CONTACT: "/admin/api/contacts/",
-    DELETE_CONTACT: "/admin/api/contacts/",
+    LIST_CONTACT: "/api/admin/contacts/list",
+    DETAIL_CONTACT: "/api/admin/contacts/detail/",
+    UPDATE_CONTACT: "/api/admin/contacts/update/",
+    DELETE_CONTACT: "/api/admin/contacts/delete/",
 }
 
 class ContactService {
@@ -34,7 +34,7 @@ class ContactService {
             }
         };
         console.log(config)
-        return axios.put(BASE_URL_SERVER + API_ENDPOINT.UPDATE_CONTACT + id + "?status=" + data, "", config);
+        return axios.put(BASE_URL_SERVER + API_ENDPOINT.UPDATE_CONTACT + id, data, config);
     }
 
     detailContact = (id) => {

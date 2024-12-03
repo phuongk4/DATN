@@ -146,6 +146,23 @@ function ListRevenue() {
             })
     }
 
+    const filterRevenueChart = async () => {
+        let type = $('#type').val();
+        await revenueService.adminDataChartRevenue(type)
+            .then((res) => {
+                if (res.status === 200) {
+                    console.log("data", res.data)
+                    let result = res.data.data;
+                    let xData = result.x_data;
+                    let yData = result.y_data;
+                    charts(xData, yData);
+                    setTotal(result.total);
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
     useEffect(() => {
         getListRevenueChart();
@@ -183,6 +200,15 @@ function ListRevenue() {
                         <div className="card">
                             <div className="card-body p-3">
                                 <h6 className="text-start mb-2">Tổng doanh thu: {ConvertNumber(total)}</h6>
+                                <div className="mb-1 col-md-3">
+                                    <label htmlFor="type">Lọc theo:</label>
+                                    <select name="type" id="type" className="form-select" onChange={filterRevenueChart}>
+                                        <option value="">--- Chọn ---</option>
+                                        <option value="day">Ngày</option>
+                                        <option value="month">Tháng</option>
+                                        <option value="year">Năm</option>
+                                    </select>
+                                </div>
                                 <div id="reportsChart" style={{height: '400px'}}/>
                             </div>
                         </div>

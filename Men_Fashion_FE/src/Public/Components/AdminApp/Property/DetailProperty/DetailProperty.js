@@ -74,7 +74,7 @@ function DetailProperty() {
             })
             .catch((err) => {
                 console.log(err)
-                message.error(err.response.data.message)
+                alert(err.response.data.message)
                 $('#btnUpdate').prop('disabled', false).text('Lưu thay đổi');
             })
     };

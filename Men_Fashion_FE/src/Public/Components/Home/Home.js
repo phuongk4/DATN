@@ -52,7 +52,7 @@ function Home() {
                 if (res.status === 200) {
                     setCategories(res.data.data);
                 } else {
-                    alert('Error')
+                    alert('Thất bại')
                 }
             })
             .catch((err) => {

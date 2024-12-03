@@ -40,13 +40,13 @@ class UserApi extends Api
 
             return response()->json($res, 200);
         } catch (TokenInvalidException $e) {
-            $res = returnMessage(-1, null, 'Token is Invalid!');
+            $res = returnMessage(-1, null, 'Vui lòng đăng nhập!');
             return response()->json($res, 400);
         } catch (TokenExpiredException $e) {
-            $res = returnMessage(-1, null, 'Token is Expired!');
+            $res = returnMessage(-1, null, 'Hết hạn đăng nhập!!');
             return response()->json($res, 400);
         } catch (\Exception $e) {
-            $res = returnMessage(-1, null, 'Authorization Token not found!');
+            $res = returnMessage(-1, null, 'Thất bại, vui lòng thử lại!');
             return response()->json($res, 401);
         }
     }
