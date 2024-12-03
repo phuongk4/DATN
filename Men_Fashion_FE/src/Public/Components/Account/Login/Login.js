@@ -24,7 +24,7 @@ function Login() {
                 sessionStorage.setItem("email", res.data.email);
                 sessionStorage.setItem("name", res.data.full_name);
                 sessionStorage.setItem("role", res.data.role);
-                alert(`Welcome ${res.data.full_name} !`);
+                alert(`Xin chào ${res.data.full_name} !`);
                 if (res.data.role === 'ADMIN') {
                     window.location.href = '/admin/dashboard';
                 } else {
@@ -33,7 +33,7 @@ function Login() {
             })
             .catch((err) => {
                 console.log(err.response.data);
-                alert(`Login failed! ` + err.response.data.message);
+                alert(`Đăng nhập thất bại! ` + err.response.data.message);
                 $('#btnLogin').prop('disabled', false).text('Đăng nhập');
             })
     };

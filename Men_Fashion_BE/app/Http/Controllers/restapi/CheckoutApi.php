@@ -6,15 +6,13 @@ use App\Enums\MyCouponStatus;
 use App\Enums\OrderMethod;
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Api;
-use App\Http\Controllers\Controller;
 use App\Models\Carts;
 use App\Models\Coupons;
 use App\Models\MyCoupons;
+use App\Models\OrderHistories;
 use App\Models\OrderItems;
 use App\Models\Orders;
 use App\Models\ProductOptions;
-use App\Models\Products;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -459,6 +457,12 @@ class CheckoutApi extends Api
             $option->save();
 
         }
+
+        $order_history = new OrderHistories();
+        $order_history->order_id = $order->id;
+        $order_history->status = OrderStatus::PROCESSING;
+        $order_history->user_id = $order->user_id;
+        $order_history->save();
 
         return $order_created;
     }

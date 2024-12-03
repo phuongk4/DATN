@@ -22,11 +22,11 @@ class AuthenticatePermission
         try {
             $user = JWTAuth::parseToken()->authenticate();
         } catch (TokenInvalidException $e) {
-            return response(['status' => 'Token is Invalid'], 400);
+            return response(['status' => 'Vui lòng đăng nhập'], 400);
         } catch (TokenExpiredException $e) {
-            return response(['status' => 'Token is Expired'], 444);
+            return response(['status' => 'Hết hạn đăng nhập!'], 444);
         } catch (Exception $e) {
-            return response(['status' => 'Authorization Token not found'], 401);
+            return response(['status' => 'Thất bại, vui lòng thử lại'], 401);
         }
         return $next($request);
     }

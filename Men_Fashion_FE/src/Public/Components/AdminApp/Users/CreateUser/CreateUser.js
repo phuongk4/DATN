@@ -29,11 +29,12 @@ function CreateUser() {
         await userService.adminCreateUser(formData)
             .then((res) => {
                 console.log("create user", res.data)
-                message.success("Tạo tài khoản thành công!")
+                alert("Tạo tài khoản thành công!")
                 navigate("/admin/users/list")
             })
             .catch((err) => {
                 console.log(err)
+                alert(err.response.data.message)
                 $('#btnCreate').prop('disabled', false).text('Tạo mới');
             })
     };

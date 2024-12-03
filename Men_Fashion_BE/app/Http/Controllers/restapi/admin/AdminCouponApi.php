@@ -147,6 +147,8 @@ class AdminCouponApi extends Api
         $start_time = $request->input('start_time');
         $end_time = $request->input('end_time');
 
+        $min_total = $request->input('min_total');
+
         $created_by = $this->user['id'];
 
         if ($name != $coupon->name) {
@@ -187,6 +189,7 @@ class AdminCouponApi extends Api
         $coupon->start_time = $start_time;
         $coupon->end_time = $end_time;
         $coupon->created_by = $created_by;
+        $coupon->min_total = $min_total;
 
         return $coupon;
     }

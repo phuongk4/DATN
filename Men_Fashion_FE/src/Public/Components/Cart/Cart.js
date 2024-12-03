@@ -242,7 +242,7 @@ function Cart() {
             <div className="container">
                 <div className="row">
                     <div className="col-md-12 mb-0"><a href="/">Trang chủ</a> <span
-                        className="mx-2 mb-0">/</span> <strong className="text-black">Cart</strong></div>
+                        className="mx-2 mb-0">/</span> <strong className="text-black">Giỏ hàng</strong></div>
                 </div>
             </div>
         </div>

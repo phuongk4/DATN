@@ -30,12 +30,12 @@ class CheckAdminPermission
                 return $next($request);
             }
         } catch (TokenInvalidException $e) {
-            return response(['status' => 'Token is Invalid'], 403);
+            return response(['status' => 'Vui lòng đăng nhập'], 403);
         } catch (TokenExpiredException $e) {
-            return response(['status' => 'Token is Expired'], 403);
+            return response(['status' => 'Hết hạn đăng nhập!'], 403);
         } catch (Exception $e) {
-            return response(['status' => 'Authorization Token not found'], 401);
+            return response(['status' => 'Thất bại, vui lòng thử lại'], 401);
         }
-        return response(['status' => 'Forbidden: You don’t have permission to access [directory] on this server'], 403);
+        return response(['status' => 'Bị cấm: Bạn không có quyền truy cập [thư mục] trên máy chủ này'], 403);
     }
 }

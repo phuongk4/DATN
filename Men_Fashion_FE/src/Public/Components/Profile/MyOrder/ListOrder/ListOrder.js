@@ -151,7 +151,7 @@ function ListOrder() {
                     setData(res.data.data)
                     setLoading(false)
                 } else {
-                    alert('Error')
+                    alert('Thất bại')
                     setLoading(false)
                 }
             })

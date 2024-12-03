@@ -18,11 +18,14 @@ import Cart from './Components/Cart/Cart';
 import Checkout from './Components/Checkout/Checkout';
 import ConfirmCheckout from './Components/Checkout/ConfirmCheckout';
 import ThanksYou from './Components/ThanksYou/ThanksYou';
+import Coupons from './Components/Coupons/Coupons';
 /* User Page */
 import Profile from './Components/Profile/Profile';
 /* My Order */
 import ListMyOrder from './Components/Profile/MyOrder/ListOrder/ListOrder';
 import DetailMyOrder from './Components/Profile/MyOrder/DetailOrder/DetailOrder';
+/* My Coupon */
+import ListMyCoupon from './Components/Profile/MyCoupons/ListCoupon/ListCoupon';
 /* Error Page */
 import NotFound from "./Components/Shared/Error/Error404";
 import ComingSoon from "./Components/Shared/ComingSoon/ComingSoon";
@@ -56,6 +59,18 @@ import ListRevenue from './Components/AdminApp/Revenues/ListRevenue/ListRevenue'
 import ListUser from './Components/AdminApp/Users/ListUser/ListUser';
 import CreateUser from './Components/AdminApp/Users/CreateUser/CreateUser';
 import UpdateUser from './Components/AdminApp/Users/UpdateUser/UpdateUser';
+/* Admin Coupons */
+import ListCoupon from './Components/AdminApp/Coupons/ListCoupon/ListCoupon';
+import CreateCoupon from './Components/AdminApp/Coupons/CreateCoupon/CreateCoupon';
+import DetailCoupon from './Components/AdminApp/Coupons/DetailCoupon/DetailCoupon';
+/* Admin Reviews */
+import ListReview from './Components/AdminApp/Reviews/ListReview/ListReview';
+import DetailReview from './Components/AdminApp/Reviews/DetailReview/DetailReview';
+/* Admin Contacts */
+import ListContact from './Components/AdminApp/Contacts/ListContact/ListContact';
+import DetailContact from './Components/AdminApp/Contacts/DetailContact/DetailContact';
+/* Review Product */
+import ReviewProduct from './Components/Profile/MyOrder/ReviewProduct/ReviewProduct';
 
 /**
  * This component renders the routes for the public part of the application.
@@ -86,10 +101,13 @@ function Public() {
                 <Route path='/checkout' element={<Checkout/>}/>
                 <Route path='/checkout_success' element={<ConfirmCheckout/>}/>
                 <Route path='/thanks-you' element={<ThanksYou/>}/>
+                <Route path='/coupons' element={<Coupons/>}/>
                 {/* Client Auth Page */}
                 <Route path='/profile' element={<Profile/>}/>
                 <Route path='/my-order' element={<ListMyOrder/>}/>
                 <Route path='/my-order/:id' element={<DetailMyOrder/>}/>
+                <Route path='/my-coupon' element={<ListMyCoupon/>}/>
+                <Route path='/reviews/products' element={<ReviewProduct/>}/>
                 {/* Admin Page */}
                 <Route path='/admin/dashboard' element={<Dashboard/>}/>
                 {/* Admin Category */}
@@ -118,7 +136,17 @@ function Public() {
                 {/* Admin Users */}
                 <Route path='/admin/users/list' element={<ListUser/>}/>
                 <Route path='/admin/users/create' element={<CreateUser/>}/>
-                <Route path='/admin/users/update/:id' element={<UpdateUser/>}/>
+                <Route path='/admin/users/detail/:id' element={<UpdateUser/>}/>
+                {/* Admin Coupons */}
+                <Route path='/admin/coupons/list' element={<ListCoupon/>}/>
+                <Route path='/admin/coupons/create' element={<CreateCoupon/>}/>
+                <Route path='/admin/coupons/detail/:id' element={<DetailCoupon/>}/>
+                {/* Admin Reviews */}
+                <Route path='/admin/reviews/list' element={<ListReview/>}/>
+                <Route path='/admin/reviews/detail/:id' element={<DetailReview/>}/>
+                {/* Admin Coupons */}
+                <Route path='/admin/contacts/list' element={<ListContact/>}/>
+                <Route path='/admin/contacts/detail/:id' element={<DetailContact/>}/>
             </Routes>
         </div>
     )

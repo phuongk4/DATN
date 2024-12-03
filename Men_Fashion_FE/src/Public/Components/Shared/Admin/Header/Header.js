@@ -40,7 +40,7 @@ function Header() {
     const handleLogout = () => {
         localStorage.clear();
         sessionStorage.clear();
-        alert('Logout success!')
+        alert('Đăng xuất thành công!')
         window.location.href = `/login`;
     }
 
@@ -100,7 +100,7 @@ function Header() {
                         <li className="nav-item dropdown pe-3">
                             <a className="nav-link nav-profile d-flex align-items-center pe-0" href="#"
                                data-bs-toggle="dropdown">
-                                <img src={BASE_URL_SERVER + '/' + data.avt} alt="Profile" className="rounded-circle"/>
+                                <img src={data.avt} alt="Profile" className="rounded-circle"/>
                                 <span className="d-none d-md-block dropdown-toggle ps-2">{data.full_name}</span>
                             </a>
 
